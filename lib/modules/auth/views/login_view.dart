@@ -99,7 +99,7 @@ class _LoginViewState extends State<LoginView> {
               Button(
                 text: 'Нэвтрэх',
                 onPressed: () {
-                  // controller.login();
+                  controller.login();
                 },
               ),
               Spacer(),

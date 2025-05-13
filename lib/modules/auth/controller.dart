@@ -15,6 +15,18 @@ class AuthController extends GetxController {
   var countdown = 60.obs;
   Timer? _timer;
 
+  void login() async {
+    // Implement login logic here
+    // For example, call an API to authenticate the user
+    // and navigate to the home screen if successful
+    if (phoneNo.value.isNotEmpty && password.value.isNotEmpty) {
+      // Example condition
+      Get.offNamed(AppRouters.home);
+    } else {
+      Get.snackbar("Error", "Please enter valid credentials");
+    }
+  }
+
   void sendCode() {
     // Implement send & resend code logic here
     // For example, send a new OTP to the user's phone number

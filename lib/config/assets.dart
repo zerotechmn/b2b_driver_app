@@ -8,4 +8,9 @@ class AssetConstants {
   static final String eyeSlashIcon = "assets/icons/eye-slash.svg";
   static final String arrowLeftIcon = "assets/icons/arrow-left.svg";
   static final String checkCircleIcon = "assets/icons/check-circle.svg";
+
+  static final String homeIcon = "assets/icons/home.svg";
+  static final String timePastIcon = "assets/icons/time-past.svg";
+  static final String mapLocationIcon = "assets/icons/map-location.svg";
+  static final String userSquareIcon = "assets/icons/user-square.svg";
 }
