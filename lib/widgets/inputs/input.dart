@@ -131,12 +131,12 @@ class _InputState extends State<Input> {
       cursorColor: colors(context).primary,
       style: textTheme(
         context,
-      ).titleSmall!.copyWith(fontWeight: FontWeight.bold),
+      ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
       decoration: InputDecoration(
         hintText: widget.hint,
         hintStyle: textTheme(context).titleSmall!.copyWith(
           color: colors(context).labelSecondary,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w500,
         ),
         filled: true,
         fillColor: colors(context).backgroundSecondary,

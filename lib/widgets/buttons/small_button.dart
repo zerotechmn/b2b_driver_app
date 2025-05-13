@@ -1,9 +1,7 @@
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-enum ButtonTypes { primary, transparent, white, danger }
-
-class Button extends StatelessWidget {
+class SmallButton extends StatelessWidget {
   final String? text;
   final void Function()? onPressed;
   final bool isEnabled;
@@ -11,7 +9,7 @@ class Button extends StatelessWidget {
   final Widget? icon;
   final double? width;
 
-  const Button({
+  const SmallButton({
     super.key,
     this.text,
     this.onPressed,
@@ -23,20 +21,20 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var backgroundColor = colors(context).primary;
-    var textColor = colors(context).backgroundPrimary;
+    var backgroundColor = colors(context).backgroundSecondary;
+    var textColor = colors(context).labelPrimary;
     var disabledTextColor = colors(context).labelSecondary;
     var disabledBackgroundColor = colors(context).backgroundSecondary;
     var overlayColor = Color.lerp(backgroundColor, textColor, 0.24);
     return SizedBox(
       width: width ?? double.infinity,
-      height: 50,
+      height: 41,
       child: TextButton(
         onPressed: !isEnabled ? null : onPressed,
         style: ButtonStyle(
           shape: const WidgetStatePropertyAll(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16)),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               side: BorderSide.none,
             ),
           ),
@@ -55,10 +53,10 @@ class Button extends StatelessWidget {
                   ? [
                     CircularProgressIndicator(
                       constraints: BoxConstraints(
-                        minHeight: 20,
-                        minWidth: 20,
-                        maxHeight: 20,
-                        maxWidth: 20,
+                        minHeight: 18,
+                        minWidth: 18,
+                        maxHeight: 18,
+                        maxWidth: 18,
                       ),
                       color: colors(context).labelSecondary,
                     ),
@@ -68,7 +66,7 @@ class Button extends StatelessWidget {
                     if (text != null)
                       Text(
                         text!,
-                        style: textTheme(context).titleSmall?.copyWith(
+                        style: textTheme(context).bodyMedium?.copyWith(
                           color: !isEnabled ? disabledTextColor : textColor,
                           fontWeight: FontWeight.w500,
                         ),

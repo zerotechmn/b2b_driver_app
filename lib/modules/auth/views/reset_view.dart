@@ -46,7 +46,7 @@ class _ResetViewState extends State<ResetView> {
           'Нууц үг сэргээх',
           style: textTheme(
             context,
-          ).titleSmall!.copyWith(fontWeight: FontWeight.bold),
+          ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
         ),
         leadingWidth: 40 + 16,
         leading: Padding(
@@ -76,7 +76,7 @@ class _ResetViewState extends State<ResetView> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              SizedBox(height: 16),
+              SizedBox(height: 32),
               Text(
                 "Нууц үгээ сэргээхийн тулд бүртгэлтэй утасны дугаараа оруулна уу",
                 textAlign: TextAlign.center,
@@ -104,9 +104,8 @@ class _ResetViewState extends State<ResetView> {
                         controller.phoneNo.value.isNotEmpty &&
                         controller.phoneNo.value.length == 8,
                     onPressed: () {
-                      // controller.resetPassword();
+                      controller.resetPassword();
                     },
-                    type: ButtonTypes.primary,
                   ),
                 ),
               ),

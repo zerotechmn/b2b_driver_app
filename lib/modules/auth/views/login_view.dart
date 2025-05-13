@@ -88,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                         text: "Сэргээх",
                         style: textTheme(context).bodyMedium!.copyWith(
                           color: colors(context).labelSecondary,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
@@ -98,7 +98,6 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(height: 32),
               Button(
                 text: 'Нэвтрэх',
-                type: ButtonTypes.primary,
                 onPressed: () {
                   // controller.login();
                 },

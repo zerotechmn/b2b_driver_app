@@ -7,12 +7,10 @@ const String envFile = String.fromEnvironment(
   defaultValue: ".env.prod",
 );
 
-@Envied(path: envFile, useConstantCase: true)
+@Envied(path: envFile, useConstantCase: true, obfuscate: true)
 abstract class Env {
   @EnviedField()
-  static const String baseUrl = _Env.baseUrl;
+  static String baseUrl = _Env.baseUrl;
   @EnviedField()
-  static const String authBaseUrl = _Env.authBaseUrl;
-  @EnviedField()
-  static const String deeplinkUrl = _Env.deeplinkUrl;
+  static String deeplinkUrl = _Env.deeplinkUrl;
 }

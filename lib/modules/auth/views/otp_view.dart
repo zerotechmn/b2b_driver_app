@@ -1,40 +1,16 @@
 import 'package:b2b_driver_app/config/assets.dart';
 import 'package:b2b_driver_app/modules/auth/controller.dart';
+import 'package:b2b_driver_app/modules/auth/views/components/otp_input.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
-import 'package:b2b_driver_app/widgets/buttons/button.dart';
-import 'package:b2b_driver_app/widgets/inputs/input.dart';
+import 'package:b2b_driver_app/widgets/buttons/small_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class OtpView extends StatefulWidget {
-  const OtpView({super.key});
+class OtpView extends StatelessWidget {
+  OtpView({super.key});
 
-  @override
-  State<OtpView> createState() => _OtpViewState();
-}
-
-class _OtpViewState extends State<OtpView> {
-  late AuthController controller;
-  final TextEditingController _phoneNo = TextEditingController();
-
-  @override
-  void initState() {
-    controller = Get.find<AuthController>();
-    if (controller.phoneNo.value.isNotEmpty) {
-      _phoneNo.text = controller.phoneNo.value;
-    }
-    _phoneNo.addListener(() {
-      controller.phoneNo.value = _phoneNo.text;
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _phoneNo.dispose();
-    super.dispose();
-  }
+  final controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +21,7 @@ class _OtpViewState extends State<OtpView> {
           'Нууц үг сэргээх',
           style: textTheme(
             context,
-          ).titleSmall!.copyWith(fontWeight: FontWeight.bold),
+          ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
         ),
         leadingWidth: 40 + 16,
         leading: Padding(
@@ -70,39 +46,57 @@ class _OtpViewState extends State<OtpView> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              SizedBox(height: 16),
-              Text(
-                "Нууц үгээ сэргээхийн тулд бүртгэлтэй утасны дугаараа оруулна уу",
-                textAlign: TextAlign.center,
-                style: textTheme(context).titleSmall,
-              ),
-              SizedBox(height: 35),
-              Input(
-                controller: _phoneNo,
-                hint: 'Утасны дугаар',
-                keyboardType: TextInputType.number,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.phoneIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.scaleDown,
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 32,
+                  ),
+                  child: Text(
+                    "Таны ${controller.phoneNo.value} дугаарт илгээсэн нууц кодыг оруулна уу.",
+                    textAlign: TextAlign.center,
+                    style: textTheme(context).titleSmall,
+                  ),
                 ),
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Button(
-                  text: 'Дараагийн алхам',
-                  onPressed: () {},
-                  type: ButtonTypes.primary,
+                OTPInput(
+                  onFinished: (p0) {
+                    controller.verifyCode(p0);
+                  },
                 ),
-              ),
-            ],
+                Obx(
+                  () => Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Text(
+                          "00:${controller.countdown.value.toString().padLeft(2, '0')}",
+                          style: textTheme(
+                            context,
+                          ).titleSmall!.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      SmallButton(
+                        text: "Дахин илгээх",
+                        width: 116,
+                        isEnabled: !controller.isCountdownActive,
+                        onPressed: () {
+                          controller.resendCode();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
