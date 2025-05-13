@@ -1,5 +1,6 @@
 import 'package:b2b_driver_app/config/assets.dart';
 import 'package:b2b_driver_app/modules/auth/controller.dart';
+import 'package:b2b_driver_app/modules/auth/views/components/password_strength_check.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:b2b_driver_app/widgets/buttons/button.dart';
 import 'package:b2b_driver_app/widgets/inputs/input.dart';
@@ -7,33 +8,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class ResetView extends StatefulWidget {
-  const ResetView({super.key});
+class ResetPasswordView extends StatefulWidget {
+  const ResetPasswordView({super.key});
 
   @override
-  State<ResetView> createState() => _ResetViewState();
+  State<ResetPasswordView> createState() => _ResetPasswordViewState();
 }
 
-class _ResetViewState extends State<ResetView> {
+class _ResetPasswordViewState extends State<ResetPasswordView> {
   late AuthController controller;
-  final TextEditingController _phoneNo = TextEditingController();
+  final TextEditingController _newPassword = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
 
   @override
   void initState() {
     controller = Get.find<AuthController>();
-    if (controller.phoneNo.value.isNotEmpty &&
-        controller.phoneNo.value.length == 8) {
-      _phoneNo.text = controller.phoneNo.value;
-    }
-    _phoneNo.addListener(() {
-      controller.phoneNo.value = _phoneNo.text;
+    _newPassword.addListener(() {
+      controller.newPassword.value = _newPassword.text;
+    });
+    _confirmPassword.addListener(() {
+      controller.confirmPassword.value = _confirmPassword.text;
     });
     super.initState();
   }
 
   @override
   void dispose() {
-    _phoneNo.dispose();
+    _newPassword.dispose();
+    _confirmPassword.dispose();
     super.dispose();
   }
 
@@ -78,34 +80,56 @@ class _ResetViewState extends State<ResetView> {
             children: [
               SizedBox(height: 32),
               Text(
-                "Нууц үгээ сэргээхийн тулд бүртгэлтэй утасны дугаараа оруулна уу",
+                "Та цааш нэвтрэх нууц үгээ үүсгэнэ үү.",
                 textAlign: TextAlign.center,
                 style: textTheme(context).titleSmall,
               ),
               SizedBox(height: 35),
               Input(
-                controller: _phoneNo,
-                hint: 'Утасны дугаар',
-                isAutoFocus: true,
-                keyboardType: TextInputType.number,
+                controller: _newPassword,
+                hint: 'Шинэ нууц үг',
+                isPassword: true,
+                showClearIcon: true,
                 leadingIcon: SvgPicture.asset(
-                  AssetConstants.phoneIcon,
+                  AssetConstants.lockIcon,
                   width: 24,
                   height: 24,
                   fit: BoxFit.scaleDown,
                 ),
+                maxLength: 16,
               ),
+              SizedBox(height: 12),
+              Input(
+                controller: _confirmPassword,
+                hint: 'Нууц үг давтах',
+                isPassword: true,
+                showClearIcon: true,
+                leadingIcon: SvgPicture.asset(
+                  AssetConstants.lockIcon,
+                  width: 24,
+                  height: 24,
+                  fit: BoxFit.scaleDown,
+                ),
+                maxLength: 16,
+              ),
+              SizedBox(height: 32),
+              PasswordStrengthCheck(),
               Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Obx(
                   () => Button(
-                    text: 'Дараагийн алхам',
+                    text: 'Нууц үг сэргээх',
                     isEnabled:
-                        controller.phoneNo.value.isNotEmpty &&
-                        controller.phoneNo.value.length == 8,
+                        controller.newPassword.value.isNotEmpty &&
+                        controller.confirmPassword.value.isNotEmpty &&
+                        controller.checkPassword('length') == true &&
+                        controller.checkPassword('uppercase') == true &&
+                        controller.checkPassword('lowercase') == true &&
+                        controller.checkPassword('number') == true &&
+                        controller.checkPassword('special') == true,
                     onPressed: () {
-                      controller.sendCode();
+                      controller.resetPassword();
                     },
                   ),
                 ),

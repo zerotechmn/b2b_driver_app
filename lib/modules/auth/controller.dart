@@ -9,22 +9,21 @@ class AuthController extends GetxController {
 
   var phoneNo = "".obs;
   var password = "".obs;
+  var newPassword = "".obs;
+  var confirmPassword = "".obs;
 
   var countdown = 60.obs;
   Timer? _timer;
 
-  void resetPassword() async {
-    // Implement password reset logic here
-    // For example, send OTP to the user's phone number
-    // await storageService.setPhoneNo(phoneNo.value);
-    startCountdown();
-    Get.toNamed(AppRouters.otp);
-  }
-
-  void resendCode() {
-    // Implement resend code logic here
+  void sendCode() {
+    // Implement send & resend code logic here
     // For example, send a new OTP to the user's phone number
     startCountdown();
+    // Navigate to the OTP screen
+    // If current route is not OTP, navigate to OTP
+    if (Get.currentRoute != AppRouters.otp) {
+      Get.toNamed(AppRouters.otp);
+    }
   }
 
   void verifyCode(String code) {
@@ -32,9 +31,63 @@ class AuthController extends GetxController {
     // For example, check if the entered code matches the sent OTP
     if (code == "1234") {
       // Example condition
-      Get.offNamed(AppRouters.home);
+      newPassword.value = "";
+      confirmPassword.value = "";
+      Get.offNamed(AppRouters.resetPassword);
     } else {
       Get.snackbar("Error", "Invalid OTP");
+    }
+  }
+
+  void resetPassword() async {
+    // Implement password reset logic here
+    // For example, call an API to reset the password
+    // and show a success bottom sheet
+    if (newPassword.value == confirmPassword.value) {
+      // Example condition
+      // Get.offNamed(AppRouters.login);
+    } else {
+      Get.snackbar("Error", "Passwords do not match");
+    }
+  }
+
+  void toChangePassword() {
+    // Implement navigation to change password screen
+    // For example, navigate to the change password screen
+    // and clear the password fields
+    password.value = "";
+    newPassword.value = "";
+    confirmPassword.value = "";
+    Get.toNamed(AppRouters.changePassword);
+  }
+
+  void changePassword() async {
+    // Implement password change logic here
+    // For example, call an API to change the password
+    if (newPassword.value == confirmPassword.value) {
+      // Example condition
+      // Get.offNamed(AppRouters.home);
+    } else {
+      Get.snackbar("Error", "Passwords do not match");
+    }
+  }
+
+  bool checkPassword(String key) {
+    // Implement password strength check logic here
+    // For example, check if the password meets certain criteria
+    switch (key) {
+      case 'length':
+        return newPassword.value.length >= 8 && newPassword.value.length <= 16;
+      case 'uppercase':
+        return newPassword.value.contains(RegExp(r'[A-Z]'));
+      case 'lowercase':
+        return newPassword.value.contains(RegExp(r'[a-z]'));
+      case 'number':
+        return newPassword.value.contains(RegExp(r'[0-9]'));
+      case 'special':
+        return newPassword.value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+      default:
+        return false;
     }
   }
 

@@ -88,7 +88,7 @@ class OtpView extends StatelessWidget {
                         width: 116,
                         isEnabled: !controller.isCountdownActive,
                         onPressed: () {
-                          controller.resendCode();
+                          controller.sendCode();
                         },
                       ),
                     ],

@@ -1,6 +1,7 @@
 import 'package:b2b_driver_app/modules/auth/binding.dart';
 import 'package:b2b_driver_app/modules/auth/views/login_view.dart';
 import 'package:b2b_driver_app/modules/auth/views/otp_view.dart';
+import 'package:b2b_driver_app/modules/auth/views/reset_password_view.dart';
 import 'package:b2b_driver_app/modules/auth/views/reset_view.dart';
 import 'package:b2b_driver_app/modules/splash/binding.dart';
 import 'package:b2b_driver_app/modules/splash/view.dart';
@@ -28,6 +29,11 @@ class AppPages {
     GetPage(
       name: AppRouters.otp,
       page: () => OtpView(),
+      binding: AuthBinding(),
+    ),
+    GetPage(
+      name: AppRouters.resetPassword,
+      page: () => ResetPasswordView(),
       binding: AuthBinding(),
     ),
   ];

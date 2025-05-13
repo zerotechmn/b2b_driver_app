@@ -7,4 +7,5 @@ class AssetConstants {
   static final String eyeIcon = "assets/icons/eye.svg";
   static final String eyeSlashIcon = "assets/icons/eye-slash.svg";
   static final String arrowLeftIcon = "assets/icons/arrow-left.svg";
+  static final String checkCircleIcon = "assets/icons/check-circle.svg";
 }

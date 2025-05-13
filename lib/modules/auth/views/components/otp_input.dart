@@ -29,6 +29,7 @@ class _OTPInputState extends State<OTPInput> {
               child: TextField(
                 controller: _controller,
                 focusNode: _focusNode,
+                autofocus: true,
                 keyboardType: TextInputType.number,
                 autofillHints: [AutofillHints.oneTimeCode],
                 maxLength: _maxLength,
