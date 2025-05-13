@@ -1,0 +1,36 @@
+name: b2b_driver_app
+description: "A new Flutter project."
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: ^5.8.0+1
+  cached_network_image: ^3.4.1
+  envied: ^1.1.1
+  device_info_plus: ^11.4.0
+  get: ^4.7.2
+  intl: ^0.20.2
+  flutter_cache_manager: ^3.4.1
+  google_fonts: ^6.2.1
+  json_annotation: ^4.9.0
+  flutter_svg: ^2.1.0
+  flutter_secure_storage: ^4.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  json_serializable: ^6.9.5
+  build_runner: ^2.4.15
+  envied_generator: ^1.1.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.svg
+    - assets/icons/
