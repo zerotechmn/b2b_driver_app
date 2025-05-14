@@ -25,7 +25,7 @@ class AppTheme {
       scrolledUnderElevation: 0,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      elevation: 0,
+      elevation: 1,
       backgroundColor: Palette.background,
       selectedItemColor: Palette.label,
       unselectedItemColor: Palette.label[100],
@@ -75,7 +75,7 @@ class AppTheme {
       scrolledUnderElevation: 0,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      elevation: 0,
+      elevation: 1,
       backgroundColor: Palette.background[700],
       selectedItemColor: Palette.label[500],
       unselectedItemColor: Palette.label[600],

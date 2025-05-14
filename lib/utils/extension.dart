@@ -8,6 +8,6 @@ extension DoubleUtils on int {
       decimalDigits: 0, // Show no decimal place
       customPattern: "#,##0'₮'",
     ).format(this);
-    return formatWithZeroDecimal.replaceAll(',', '\'');
+    return formatWithZeroDecimal;
   }
 }
