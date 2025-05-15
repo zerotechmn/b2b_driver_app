@@ -1,6 +1,8 @@
+import 'package:b2b_driver_app/modules/main_pages/home/controller.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:b2b_driver_app/utils/extension.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class UserCard extends StatefulWidget {
@@ -14,11 +16,50 @@ class _UserCardState extends State<UserCard> {
   @protected
   late QrImage qrImage;
 
+  late HomeController controller;
+
   @override
   void initState() {
     super.initState();
+    controller = Get.find<HomeController>();
     final qrCode = QrCode(2, QrErrorCorrectLevel.Q)..addData('lorem ipsum');
     qrImage = QrImage(qrCode);
+  }
+
+  getQrCode({bool isDialog = false}) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Check if the screen is in landscape mode
+    final isLandscape = screenWidth > screenHeight;
+    double maxDialogSize = 500;
+    double dialogSize = isLandscape ? screenHeight - 64 : screenWidth - 64;
+    if (dialogSize > maxDialogSize) {
+      dialogSize = maxDialogSize;
+    }
+
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: isDialog ? dialogSize : 110,
+          maxHeight: isDialog ? dialogSize : 110,
+        ),
+        decoration: BoxDecoration(
+          color: colors(context).backgroundPrimary,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: PrettyQrView(
+          qrImage: qrImage,
+          decoration: PrettyQrDecoration(
+            shape: PrettyQrSmoothSymbol(
+              color: isDialog ? Color(0xFF000000) : Color(0xFFd54d3f),
+              roundFactor: 1,
+            ),
+            quietZone: const PrettyQrModulesQuietZone(3),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -78,23 +119,14 @@ class _UserCardState extends State<UserCard> {
                   ],
                 ),
               ),
-              Container(
-                width: 110,
-                height: 110,
-                decoration: BoxDecoration(
-                  color: colors(context).backgroundPrimary,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: PrettyQrView(
-                  qrImage: qrImage,
-                  decoration: const PrettyQrDecoration(
-                    shape: PrettyQrSmoothSymbol(
-                      color: Color(0xFFd54d3f),
-                      roundFactor: 1,
-                    ),
-                    quietZone: PrettyQrModulesQuietZone(3),
-                  ),
-                ),
+              GestureDetector(
+                onTap: () {
+                  Get.dialog(
+                    getQrCode(isDialog: true),
+                    barrierDismissible: true,
+                  );
+                },
+                child: getQrCode(),
               ),
             ],
           ),
