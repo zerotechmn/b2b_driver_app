@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class ResetPasswordView extends StatefulWidget {
-  const ResetPasswordView({super.key});
+class ChangePasswordView extends StatefulWidget {
+  const ChangePasswordView({super.key});
 
   @override
-  State<ResetPasswordView> createState() => _ResetPasswordViewState();
+  State<ChangePasswordView> createState() => _ChangePasswordViewState();
 }
 
-class _ResetPasswordViewState extends State<ResetPasswordView> {
+class _ChangePasswordViewState extends State<ChangePasswordView> {
   late AuthController controller;
   final TextEditingController _password = TextEditingController();
   final TextEditingController _newPassword = TextEditingController();
@@ -49,7 +49,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Нууц үг сэргээх',
+          'Нууц үг солих',
           style: textTheme(
             context,
           ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
@@ -78,83 +78,84 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              SizedBox(height: 32),
-              Text(
-                "Та цааш нэвтрэх нууц үгээ үүсгэнэ үү.",
-                textAlign: TextAlign.center,
-                style: textTheme(context).titleSmall,
-              ),
-              SizedBox(height: 35),
-              Input(
-                controller: _password,
-                hint: 'Хуучин нууц үг',
-                isPassword: true,
-                showClearIcon: true,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.lockIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.scaleDown,
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    SizedBox(height: 16),
+                    Input(
+                      controller: _password,
+                      hint: 'Хуучин нууц үг',
+                      isPassword: true,
+                      showClearIcon: true,
+                      leadingIcon: SvgPicture.asset(
+                        AssetConstants.lockIcon,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      maxLength: 16,
+                    ),
+                    SizedBox(height: 12),
+                    Input(
+                      controller: _newPassword,
+                      hint: 'Шинэ нууц үг',
+                      isPassword: true,
+                      showClearIcon: true,
+                      leadingIcon: SvgPicture.asset(
+                        AssetConstants.lockIcon,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      maxLength: 16,
+                    ),
+                    SizedBox(height: 12),
+                    Input(
+                      controller: _confirmPassword,
+                      hint: 'Нууц үг давтах',
+                      isPassword: true,
+                      showClearIcon: true,
+                      leadingIcon: SvgPicture.asset(
+                        AssetConstants.lockIcon,
+                        width: 24,
+                        height: 24,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      maxLength: 16,
+                    ),
+                    SizedBox(height: 32),
+                    PasswordStrengthCheck(),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Obx(
+                        () => Button(
+                          text: 'Нууц үг солих',
+                          isEnabled:
+                              controller.password.value.isNotEmpty &&
+                              controller.newPassword.value.isNotEmpty &&
+                              controller.confirmPassword.value.isNotEmpty &&
+                              controller.checkPassword('length') == true &&
+                              controller.checkPassword('uppercase') == true &&
+                              controller.checkPassword('lowercase') == true &&
+                              controller.checkPassword('number') == true &&
+                              controller.checkPassword('special') == true,
+                          onPressed: () {
+                            controller.changePassword();
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                maxLength: 16,
               ),
-              SizedBox(height: 12),
-              Input(
-                controller: _newPassword,
-                hint: 'Шинэ нууц үг',
-                isPassword: true,
-                showClearIcon: true,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.lockIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.scaleDown,
-                ),
-                maxLength: 16,
-              ),
-              SizedBox(height: 12),
-              Input(
-                controller: _confirmPassword,
-                hint: 'Нууц үг давтах',
-                isPassword: true,
-                showClearIcon: true,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.lockIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.scaleDown,
-                ),
-                maxLength: 16,
-              ),
-              SizedBox(height: 32),
-              PasswordStrengthCheck(),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Obx(
-                  () => Button(
-                    text: 'Нууц үг солих',
-                    isEnabled:
-                        controller.password.value.isNotEmpty &&
-                        controller.newPassword.value.isNotEmpty &&
-                        controller.confirmPassword.value.isNotEmpty &&
-                        controller.checkPassword('length') == true &&
-                        controller.checkPassword('uppercase') == true &&
-                        controller.checkPassword('lowercase') == true &&
-                        controller.checkPassword('number') == true &&
-                        controller.checkPassword('special') == true,
-                    onPressed: () {
-                      controller.changePassword();
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

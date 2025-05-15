@@ -1,6 +1,6 @@
 import 'package:b2b_driver_app/routers/app_pages.dart';
 import 'package:b2b_driver_app/routers/routers.dart';
-import 'package:b2b_driver_app/services/secure_storage.dart';
+import 'package:b2b_driver_app/services/storage_service.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
