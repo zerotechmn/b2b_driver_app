@@ -1,5 +1,6 @@
 import 'package:b2b_driver_app/config/assets.dart';
 import 'package:b2b_driver_app/modules/main_pages/controller.dart';
+import 'package:b2b_driver_app/modules/main_pages/history/view.dart';
 import 'package:b2b_driver_app/modules/main_pages/home/view.dart';
 import 'package:b2b_driver_app/modules/main_pages/profile/view.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
@@ -21,7 +22,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
 
   final List<Widget> _pages = [
     HomeView(),
-    Container(color: Colors.green),
+    HistoryView(),
     Container(color: Colors.blue),
     ProfileView(),
   ];

@@ -6,6 +6,7 @@ import 'package:b2b_driver_app/modules/main_pages/home/components/allowed_statio
 import 'package:b2b_driver_app/modules/main_pages/home/components/nearby_station_card.dart';
 import 'package:b2b_driver_app/modules/main_pages/home/components/user_card.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
+import 'package:b2b_driver_app/widgets/appbars/home_appbar.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
@@ -14,30 +15,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Container(),
-        leadingWidth: 0,
-        toolbarHeight: 66,
-        centerTitle: false,
-        title: Column(
-          spacing: 4,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hey? Dulguun',
-              style: textTheme(
-                context,
-              ).headlineSmall!.copyWith(fontWeight: FontWeight.w600),
-            ),
-            Text(
-              'Эрч хүчтэй байгаарай',
-              style: textTheme(
-                context,
-              ).bodySmall!.copyWith(color: colors(context).labelSecondary),
-            ),
-          ],
-        ),
-      ),
+      appBar: getHomeAppBar(context, "Dulguun"),
       backgroundColor: colors(context).backgroundSecondary,
       body: SingleChildScrollView(
         child: Padding(
