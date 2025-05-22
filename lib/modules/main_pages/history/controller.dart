@@ -9,7 +9,6 @@ class HistoryController extends GetxController {
     if (startDate.value.isAfter(endDate.value)) {
       endDate.value = date;
     }
-    update();
   }
 
   updateEndDate(date) {
@@ -17,6 +16,5 @@ class HistoryController extends GetxController {
     if (startDate.value.isAfter(endDate.value)) {
       startDate.value = date;
     }
-    update();
   }
 }

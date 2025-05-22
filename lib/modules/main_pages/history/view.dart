@@ -5,13 +5,15 @@ import 'package:b2b_driver_app/widgets/appbars/home_appbar.dart';
 import 'package:b2b_driver_app/widgets/inputs/datepicker.dart';
 import 'package:b2b_driver_app/widgets/items/history_item.dart';
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 
 class HistoryView extends StatelessWidget {
   const HistoryView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    HistoryController controller = Get.find<HistoryController>();
+
     return Scaffold(
       appBar: getHomeAppBar(context, "Dulguun"),
       backgroundColor: colors(context).backgroundSecondary,
@@ -20,30 +22,30 @@ class HistoryView extends StatelessWidget {
         child: Column(
           spacing: 8,
           children: [
-            GetBuilder<HistoryController>(
-              builder: (controller) {
-                return Row(
-                  spacing: 8,
-                  children: [
-                    Flexible(
-                      child: Datepicker(
-                        label: "Эхлэх",
-                        defaultValue: controller.startDate.value,
-                        onChange:
-                            (datetime) => controller.updateStartDate(datetime),
-                      ),
+            Row(
+              spacing: 8,
+              children: [
+                Flexible(
+                  child: Obx(
+                    () => Datepicker(
+                      label: "Эхлэх",
+                      defaultValue: controller.startDate.value,
+                      onChange:
+                          (datetime) => controller.updateStartDate(datetime),
                     ),
-                    Flexible(
-                      child: Datepicker(
-                        label: "Дуусах",
-                        defaultValue: controller.endDate.value,
-                        onChange:
-                            (datetime) => controller.updateEndDate(datetime),
-                      ),
+                  ),
+                ),
+                Flexible(
+                  child: Obx(
+                    () => Datepicker(
+                      label: "Дуусах",
+                      defaultValue: controller.endDate.value,
+                      onChange:
+                          (datetime) => controller.updateEndDate(datetime),
                     ),
-                  ],
-                );
-              },
+                  ),
+                ),
+              ],
             ),
             Row(
               spacing: 8,
@@ -105,7 +107,10 @@ class HistoryView extends StatelessWidget {
               ),
               child: Column(
                 spacing: 16,
-                children: [HistoryItem(), HistoryItem()],
+                children: [
+                  HistoryItem(historyType: HistoryTypes.debit),
+                  HistoryItem(historyType: HistoryTypes.credit),
+                ],
               ),
             ),
           ],

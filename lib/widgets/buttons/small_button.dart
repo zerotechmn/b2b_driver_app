@@ -8,6 +8,8 @@ class SmallButton extends StatelessWidget {
   final bool isLoading;
   final Widget? icon;
   final double? width;
+  final double? height;
+  final double? borderRadius;
 
   const SmallButton({
     super.key,
@@ -17,6 +19,8 @@ class SmallButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.width,
+    this.height,
+    this.borderRadius,
   });
 
   @override
@@ -28,13 +32,15 @@ class SmallButton extends StatelessWidget {
     var overlayColor = Color.lerp(backgroundColor, textColor, 0.24);
     return SizedBox(
       width: width ?? double.infinity,
-      height: 41,
+      height: height ?? 41,
       child: TextButton(
         onPressed: !isEnabled ? null : onPressed,
         style: ButtonStyle(
-          shape: const WidgetStatePropertyAll(
+          shape: WidgetStatePropertyAll(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.all(
+                Radius.circular(borderRadius ?? 10),
+              ),
               side: BorderSide.none,
             ),
           ),

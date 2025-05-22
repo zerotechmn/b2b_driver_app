@@ -19,7 +19,7 @@ class AllowedPetrolCard extends StatelessWidget {
       child: Row(
         spacing: 8,
         children: [
-          SvgPicture.asset(AssetConstants.lockIcon),
+          SvgPicture.asset(AssetConstants.lockViewFinderIcon),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

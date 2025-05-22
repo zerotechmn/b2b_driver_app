@@ -21,7 +21,7 @@ class AccountTogglePinCard extends StatelessWidget {
       child: Row(
         spacing: 8,
         children: [
-          SvgPicture.asset(AssetConstants.lockIcon),
+          SvgPicture.asset(AssetConstants.lockOutlinedIcon),
           Expanded(
             child: GetBuilder<HomeController>(
               builder: (controller) {

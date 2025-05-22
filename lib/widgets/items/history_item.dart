@@ -4,12 +4,16 @@ import 'package:b2b_driver_app/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+enum HistoryTypes { debit, credit, withdraw, charge }
+
 class HistoryItem extends StatelessWidget {
-  const HistoryItem({super.key});
+  const HistoryItem({super.key, required this.historyType});
+
+  final HistoryTypes historyType;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Row(
         spacing: 8,
