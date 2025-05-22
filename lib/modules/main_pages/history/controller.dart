@@ -1,3 +1,22 @@
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
 
-class HistoryController extends GetxController {}
+class HistoryController extends GetxController {
+  var startDate = DateTime.now().obs;
+  var endDate = DateTime.now().obs;
+
+  updateStartDate(date) {
+    startDate.value = date;
+    if (startDate.value.isAfter(endDate.value)) {
+      endDate.value = date;
+    }
+    update();
+  }
+
+  updateEndDate(date) {
+    endDate.value = date;
+    if (startDate.value.isAfter(endDate.value)) {
+      startDate.value = date;
+    }
+    update();
+  }
+}

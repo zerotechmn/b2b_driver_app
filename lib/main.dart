@@ -2,6 +2,7 @@ import 'package:b2b_driver_app/routers/app_pages.dart';
 import 'package:b2b_driver_app/routers/routers.dart';
 import 'package:b2b_driver_app/services/storage_service.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
+import 'package:b2b_driver_app/utils/locale.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,8 @@ void main() async {
   if (!kDebugMode) {
     debugPrint = (String? message, {int? wrapWidth}) {};
   }
+
+  initializeMongolianLocale();
   // Initialize dependencies
   await initServices();
 
