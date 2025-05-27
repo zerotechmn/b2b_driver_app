@@ -1,14 +1,31 @@
+import 'package:b2b_driver_app/data/models/statement_model.dart';
+import 'package:b2b_driver_app/data/models/user_model.dart';
+import 'package:b2b_driver_app/data/repositories/user_repository.dart';
+import 'package:b2b_driver_app/services/storage_service.dart';
+import 'package:b2b_driver_app/utils/exceptions.dart';
+import 'package:b2b_driver_app/utils/extension.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class HistoryController extends GetxController {
-  var startDate = DateTime.now().obs;
+  final UserRepository userRepository = UserRepository();
+  final StorageService storageService = Get.find<StorageService>();
+
+  var startDate = DateTime.now().subtract(Duration(days: 7)).obs;
   var endDate = DateTime.now().obs;
+
+  var totalCredit = 0.0.obs;
+  var totalDebit = 0.0.obs;
+  var isLoading = true.obs;
+
+  Rx<List<StatementModel>> statements = Rx<List<StatementModel>>([]);
 
   updateStartDate(date) {
     startDate.value = date;
     if (startDate.value.isAfter(endDate.value)) {
       endDate.value = date;
     }
+    fetchStatements();
   }
 
   updateEndDate(date) {
@@ -16,5 +33,29 @@ class HistoryController extends GetxController {
     if (startDate.value.isAfter(endDate.value)) {
       startDate.value = date;
     }
+    fetchStatements();
+  }
+
+  fetchStatements() async {
+    final UserModel? user = await storageService.readJson<UserModel>(
+      "user",
+      (json) => UserModel.fromJson(json),
+    );
+    isLoading.value = true;
+    update();
+    try {
+      if (user != null) {
+        statements.value = await userRepository.fetchStatement(
+          user.cardId,
+          DateFormat("yyyy-MM-dd", "mn_MN").format(startDate.value),
+          DateFormat("yyyy-MM-dd", "mn_MN").format(endDate.value),
+        );
+      }
+    } on AppException catch (e) {
+      e.showSnackbar();
+    } finally {
+      isLoading.value = false;
+    }
+    update();
   }
 }

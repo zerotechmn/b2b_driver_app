@@ -1,3 +1,4 @@
+import 'package:b2b_driver_app/data/models/statement_model.dart';
 import 'package:b2b_driver_app/modules/main_pages/history/controller.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:b2b_driver_app/utils/extension.dart';
@@ -15,7 +16,7 @@ class HistoryView extends StatelessWidget {
     HistoryController controller = Get.find<HistoryController>();
 
     return Scaffold(
-      appBar: getHomeAppBar(context, "Dulguun"),
+      appBar: getHomeAppBar(context),
       backgroundColor: colors(context).backgroundSecondary,
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -98,19 +99,46 @@ class HistoryView extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: colors(context).backgroundPrimary,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                spacing: 16,
-                children: [
-                  HistoryItem(historyType: HistoryTypes.debit),
-                  HistoryItem(historyType: HistoryTypes.credit),
-                ],
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: colors(context).backgroundPrimary,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: GetBuilder<HistoryController>(
+                  builder: (controller) {
+                    if (controller.isLoading.value) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: colors(context).primary,
+                        ),
+                      );
+                    }
+                    List<StatementModel> statements =
+                        controller.statements.value;
+                    return ListView.separated(
+                      itemCount: statements.length,
+                      padding: const EdgeInsets.all(16),
+                      separatorBuilder:
+                          (context, index) => SizedBox(height: 16),
+                      itemBuilder: (context, index) {
+                        return HistoryItem(
+                          historyType:
+                              statements[index].statementTypeEnum == "PURCHASE"
+                                  ? HistoryTypes.purchase
+                                  : (statements[index].statementTypeEnum ==
+                                          "WITHDRAW"
+                                      ? HistoryTypes.withdraw
+                                      : (statements[index].statementTypeEnum ==
+                                              "CHARGE"
+                                          ? HistoryTypes.charge
+                                          : HistoryTypes.bonus)),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ],

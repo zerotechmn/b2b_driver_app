@@ -1,6 +1,8 @@
 import 'package:b2b_driver_app/config/assets.dart';
+import 'package:b2b_driver_app/data/models/statement_model.dart';
 import 'package:b2b_driver_app/modules/main_pages/home/controller.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
+import 'package:b2b_driver_app/widgets/items/history_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -29,7 +31,18 @@ class AccountHistoryCard extends StatelessWidget {
           ),
           GetBuilder<HomeController>(
             builder: (controller) {
-              if (controller.accountHistory.isEmpty) {
+              if (controller.isLoading.value) {
+                return SizedBox(
+                  width: double.infinity,
+                  height: 137,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: colors(context).primary,
+                    ),
+                  ),
+                );
+              }
+              if (controller.statements.value.isEmpty) {
                 return Center(
                   child: Column(
                     children: [
@@ -57,21 +70,22 @@ class AccountHistoryCard extends StatelessWidget {
                   ),
                 );
               }
+              List<StatementModel> statements = controller.statements.value;
               return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: controller.accountHistory.length,
+                itemCount: statements.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(controller.accountHistory[index].title),
-                    subtitle: Text(controller.accountHistory[index].date),
-                    trailing: Text(
-                      "${controller.accountHistory[index].amount} ₮",
-                      style: textTheme(context).bodyLarge!.copyWith(
-                        color: colors(context).labelPrimary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                  return HistoryItem(
+                    historyType:
+                        statements[index].statementTypeEnum == "PURCHASE"
+                            ? HistoryTypes.purchase
+                            : (statements[index].statementTypeEnum == "WITHDRAW"
+                                ? HistoryTypes.withdraw
+                                : (statements[index].statementTypeEnum ==
+                                        "CHARGE"
+                                    ? HistoryTypes.charge
+                                    : HistoryTypes.bonus)),
                   );
                 },
               );

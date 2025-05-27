@@ -4,6 +4,7 @@ import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class AccountTogglePinCard extends StatelessWidget {
   const AccountTogglePinCard({super.key});
@@ -26,6 +27,7 @@ class AccountTogglePinCard extends StatelessWidget {
             child: GetBuilder<HomeController>(
               builder: (controller) {
                 bool showPin = controller.showAccountPin.value;
+                int pin = controller.cardDetail.value?.pin ?? 9999;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -60,10 +62,13 @@ class AccountTogglePinCard extends StatelessWidget {
                           ),
                       child:
                           showPin
-                              ? Text(
-                                "1234",
-                                key: ValueKey("pinVisible"),
-                                style: textTheme(context).titleMedium,
+                              ? Skeletonizer(
+                                enabled: controller.isLoading.value,
+                                child: Text(
+                                  pin.toString(),
+                                  key: ValueKey("pinVisible"),
+                                  style: textTheme(context).titleMedium,
+                                ),
                               )
                               : SizedBox.shrink(key: ValueKey("pinHidden")),
                     ),

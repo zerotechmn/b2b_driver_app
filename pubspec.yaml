@@ -23,6 +23,7 @@ dependencies:
   pretty_qr_code: ^3.4.0
   modal_bottom_sheet: ^3.0.0
   table_calendar: ^3.2.0
+  skeletonizer: ^1.4.3
 
 dev_dependencies:
   flutter_test:

@@ -9,10 +9,10 @@ import 'package:get/get.dart';
 class AuthRepository {
   final ApiService apiService = Get.find<ApiService>();
 
-  Future<User> login(phoneNo, password) async {
+  Future<UserModel> login(phoneNo, password) async {
     final res = await apiService.call(
       Apis.login().copyWith(data: {"phone": phoneNo, "password": password}),
     );
-    return parseOrThrow(res.data, User.fromJson);
+    return parseOrThrow(res.data, UserModel.fromJson);
   }
 }

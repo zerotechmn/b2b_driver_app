@@ -4,7 +4,7 @@ import 'package:b2b_driver_app/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-enum HistoryTypes { debit, credit, withdraw, charge }
+enum HistoryTypes { purchase, bonus, withdraw, charge }
 
 class HistoryItem extends StatelessWidget {
   const HistoryItem({super.key, required this.historyType});
@@ -13,6 +13,16 @@ class HistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String type = "Зарлага";
+    if (historyType == HistoryTypes.purchase) {
+      type = "Зарлага";
+    } else if (historyType == HistoryTypes.bonus) {
+      type = "Бонус";
+    } else if (historyType == HistoryTypes.withdraw) {
+      type = "Гарсан";
+    } else if (historyType == HistoryTypes.charge) {
+      type = "Цэгэглэлт";
+    }
     return SizedBox(
       width: double.infinity,
       child: Row(
@@ -36,7 +46,7 @@ class HistoryItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Орлого", style: textTheme(context).titleMedium),
+                Text(type, style: textTheme(context).titleMedium),
                 Text(
                   "2025-04-14 22:55",
                   style: textTheme(

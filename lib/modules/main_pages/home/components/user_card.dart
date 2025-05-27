@@ -1,69 +1,65 @@
+import 'package:b2b_driver_app/data/models/card_model.dart';
 import 'package:b2b_driver_app/modules/main_pages/home/controller.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:b2b_driver_app/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-class UserCard extends StatefulWidget {
+class UserCard extends StatelessWidget {
   const UserCard({super.key});
 
   @override
-  State<UserCard> createState() => _UserCardState();
-}
+  Widget build(BuildContext context) {
+    getQrCode({bool isDialog = false}) {
+      final screenWidth = MediaQuery.of(context).size.width;
+      final screenHeight = MediaQuery.of(context).size.height;
 
-class _UserCardState extends State<UserCard> {
-  @protected
-  late QrImage qrImage;
+      // Check if the screen is in landscape mode
+      final isLandscape = screenWidth > screenHeight;
+      double maxDialogSize = 500;
+      double dialogSize = isLandscape ? screenHeight - 64 : screenWidth - 64;
+      if (dialogSize > maxDialogSize) {
+        dialogSize = maxDialogSize;
+      }
 
-  late HomeController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.find<HomeController>();
-    final qrCode = QrCode(2, QrErrorCorrectLevel.Q)..addData('lorem ipsum');
-    qrImage = QrImage(qrCode);
-  }
-
-  getQrCode({bool isDialog = false}) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    // Check if the screen is in landscape mode
-    final isLandscape = screenWidth > screenHeight;
-    double maxDialogSize = 500;
-    double dialogSize = isLandscape ? screenHeight - 64 : screenWidth - 64;
-    if (dialogSize > maxDialogSize) {
-      dialogSize = maxDialogSize;
-    }
-
-    return Center(
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: isDialog ? dialogSize : 110,
-          maxHeight: isDialog ? dialogSize : 110,
-        ),
-        decoration: BoxDecoration(
-          color: colors(context).backgroundPrimary,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: PrettyQrView(
-          qrImage: qrImage,
-          decoration: PrettyQrDecoration(
-            shape: PrettyQrSmoothSymbol(
-              color: isDialog ? Color(0xFF000000) : Color(0xFFd54d3f),
-              roundFactor: 1,
-            ),
-            quietZone: const PrettyQrModulesQuietZone(3),
+      return Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: isDialog ? dialogSize : 110,
+            maxHeight: isDialog ? dialogSize : 110,
+          ),
+          decoration: BoxDecoration(
+            color: colors(context).backgroundPrimary,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: GetBuilder<HomeController>(
+            builder: (controller) {
+              final qrCode = controller.getQR();
+              if (qrCode == null || controller.isLoading.value) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: colors(context).primary,
+                  ),
+                );
+              }
+              return PrettyQrView(
+                qrImage: controller.getQR(),
+                decoration: PrettyQrDecoration(
+                  shape: PrettyQrSmoothSymbol(
+                    color: isDialog ? Color(0xFF000000) : Color(0xFFd54d3f),
+                    roundFactor: 1,
+                  ),
+                  quietZone: const PrettyQrModulesQuietZone(3),
+                ),
+              );
+            },
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  @override
-  Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
@@ -78,45 +74,54 @@ class _UserCardState extends State<UserCard> {
           child: Row(
             children: [
               Expanded(
-                child: Column(
-                  spacing: 4,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Картын үлдэгдэл",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme(context).bodyMedium!.copyWith(
-                        color: colors(context).backgroundPrimary,
+                child: GetBuilder<HomeController>(
+                  builder: (controller) {
+                    bool isLoading = controller.isLoading.value;
+                    CardModel? card = controller.cardDetail.value;
+                    return Skeletonizer(
+                      enabled: isLoading,
+                      child: Column(
+                        spacing: 4,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Картын үлдэгдэл",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: textTheme(context).bodyMedium!.copyWith(
+                              color: colors(context).backgroundPrimary,
+                            ),
+                          ),
+                          Text(
+                            (card?.balance ?? 0).toInt().toCurrency(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: textTheme(context).headlineLarge!.copyWith(
+                              color: colors(context).backgroundPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            "Картын дугаар",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: textTheme(context).bodyMedium!.copyWith(
+                              color: colors(context).backgroundPrimary,
+                            ),
+                          ),
+                          Text(
+                            (card?.cardNumber ?? "0000 0000 0000 0000"),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: textTheme(context).titleMedium!.copyWith(
+                              color: colors(context).backgroundPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      1000000.toCurrency(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme(context).headlineLarge!.copyWith(
-                        color: colors(context).backgroundPrimary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text(
-                      "Картын дугаар",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme(context).bodyMedium!.copyWith(
-                        color: colors(context).backgroundPrimary,
-                      ),
-                    ),
-                    Text(
-                      "4000 7647 8321 4959",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: textTheme(context).titleMedium!.copyWith(
-                        color: colors(context).backgroundPrimary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
               GestureDetector(

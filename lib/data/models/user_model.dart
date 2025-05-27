@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'user_model.g.dart';
 
 @JsonSerializable()
-class User {
+class UserModel {
   final String id;
 
   final String firstName;
@@ -13,8 +13,9 @@ class User {
   final String registerNumber;
   final String carNumber;
   final String cardId;
+  final VendorModel vendor;
 
-  User({
+  UserModel({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -23,17 +24,19 @@ class User {
     required this.registerNumber,
     required this.carNumber,
     required this.cardId,
+    required this.vendor,
   });
 
-  /// **Factory method to create `User` from JSON**
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  /// **Factory method to create `UserModel` from JSON**
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
-  /// **Method to convert `User` to JSON**
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  /// **Method to convert `UserModel` to JSON**
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
 }
 
 @JsonSerializable()
-class Vendor {
+class VendorModel {
   final String id;
   final String name;
   final num balance;
@@ -41,7 +44,7 @@ class Vendor {
   final String register;
   final String status;
 
-  Vendor({
+  VendorModel({
     required this.name,
     required this.id,
     required this.balance,
@@ -50,9 +53,10 @@ class Vendor {
     required this.status,
   });
 
-  /// **Factory method to create `User` from JSON**
-  factory Vendor.fromJson(Map<String, dynamic> json) => _$VendorFromJson(json);
+  /// **Factory method to create `VendorModel` from JSON**
+  factory VendorModel.fromJson(Map<String, dynamic> json) =>
+      _$VendorModelFromJson(json);
 
-  /// **Method to convert `Vendor` to JSON**
-  Map<String, dynamic> toJson() => _$VendorToJson(this);
+  /// **Method to convert `VendorModel` to JSON**
+  Map<String, dynamic> toJson() => _$VendorModelToJson(this);
 }

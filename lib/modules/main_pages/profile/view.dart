@@ -17,7 +17,7 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     ProfileController controller = Get.find<ProfileController>();
     return Scaffold(
-      appBar: getHomeAppBar(context, "Dulguun"),
+      appBar: getHomeAppBar(context),
       backgroundColor: colors(context).backgroundSecondary,
       body: Padding(
         padding: EdgeInsets.all(16),
