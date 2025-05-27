@@ -96,11 +96,14 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
               const SizedBox(height: 32),
-              Button(
-                text: 'Нэвтрэх',
-                onPressed: () {
-                  controller.login();
-                },
+              Obx(
+                () => Button(
+                  text: 'Нэвтрэх',
+                  onPressed: () {
+                    controller.login();
+                  },
+                  isLoading: controller.isLoading.value,
+                ),
               ),
               Spacer(),
             ],

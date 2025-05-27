@@ -4,5 +4,9 @@ import 'package:dio/dio.dart';
 class Apis {
   // Auth
   static var login =
-      () => RequestOptions(baseUrl: Env.baseUrl, path: "login", method: "POST");
+      () => RequestOptions(
+        baseUrl: Env.baseUrl,
+        path: "driver-app/login",
+        method: "POST",
+      );
 }

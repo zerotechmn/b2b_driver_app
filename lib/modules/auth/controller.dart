@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:b2b_driver_app/data/repositories/auth_repository.dart';
 import 'package:b2b_driver_app/routers/routers.dart';
 import 'package:b2b_driver_app/services/storage_service.dart';
+import 'package:b2b_driver_app/utils/exceptions.dart';
+import 'package:b2b_driver_app/utils/extension.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
+  final AuthRepository authRepository = AuthRepository();
   final StorageService storageService = Get.find<StorageService>();
 
   var phoneNo = "".obs;
@@ -12,18 +16,21 @@ class AuthController extends GetxController {
   var newPassword = "".obs;
   var confirmPassword = "".obs;
 
+  var isLoading = false.obs;
+
   var countdown = 60.obs;
   Timer? _timer;
 
   void login() async {
-    // Implement login logic here
-    // For example, call an API to authenticate the user
-    // and navigate to the home screen if successful
-    if (phoneNo.value.isNotEmpty && password.value.isNotEmpty) {
-      // Example condition
+    try {
+      isLoading.value = true;
+      final user = await authRepository.login(phoneNo.value, password.value);
+      storageService.writeJson("user", user);
       Get.offNamed(AppRouters.home);
-    } else {
-      Get.snackbar("Error", "Please enter valid credentials");
+    } on AppException catch (e) {
+      e.showSnackbar();
+    } finally {
+      isLoading.value = false;
     }
   }
 

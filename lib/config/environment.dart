@@ -4,7 +4,7 @@ part 'environment.g.dart';
 
 const String envFile = String.fromEnvironment(
   'ENV_FILE',
-  defaultValue: ".env.prod",
+  defaultValue: ".env.staging",
 );
 
 @Envied(path: envFile, useConstantCase: true, obfuscate: true)

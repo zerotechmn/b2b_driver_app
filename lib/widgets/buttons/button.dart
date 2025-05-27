@@ -1,7 +1,7 @@
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-enum ButtonTypes { primary, transparent, white, danger }
+enum ButtonTypes { primary, secondary, danger }
 
 class Button extends StatelessWidget {
   final String? text;
@@ -10,6 +10,7 @@ class Button extends StatelessWidget {
   final bool isLoading;
   final Widget? icon;
   final double? width;
+  final ButtonTypes type;
 
   const Button({
     super.key,
@@ -19,6 +20,7 @@ class Button extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.width,
+    this.type = ButtonTypes.primary,
   });
 
   @override
@@ -28,11 +30,24 @@ class Button extends StatelessWidget {
     var disabledTextColor = colors(context).labelSecondary;
     var disabledBackgroundColor = colors(context).backgroundSecondary;
     var overlayColor = Color.lerp(backgroundColor, textColor, 0.24);
+    if (type == ButtonTypes.danger) {
+      backgroundColor = colors(context).danger;
+      textColor = colors(context).backgroundPrimary;
+      disabledTextColor = colors(context).labelSecondary;
+      disabledBackgroundColor = colors(context).backgroundSecondary;
+      overlayColor = Color.lerp(backgroundColor, textColor, 0.24);
+    } else if (type == ButtonTypes.secondary) {
+      backgroundColor = colors(context).backgroundPrimary;
+      textColor = colors(context).labelPrimary;
+      disabledTextColor = colors(context).labelSecondary;
+      disabledBackgroundColor = colors(context).backgroundSecondary;
+      overlayColor = Color.lerp(backgroundColor, textColor, 0.24);
+    }
     return SizedBox(
       width: width ?? double.infinity,
       height: 50,
       child: TextButton(
-        onPressed: !isEnabled ? null : onPressed,
+        onPressed: !isEnabled || isLoading ? null : onPressed,
         style: ButtonStyle(
           shape: const WidgetStatePropertyAll(
             RoundedRectangleBorder(

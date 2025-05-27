@@ -1,5 +1,6 @@
 import 'package:b2b_driver_app/routers/app_pages.dart';
 import 'package:b2b_driver_app/routers/routers.dart';
+import 'package:b2b_driver_app/services/api_service.dart';
 import 'package:b2b_driver_app/services/storage_service.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:b2b_driver_app/utils/locale.dart';
@@ -38,7 +39,7 @@ void main() async {
 
 Future<void> initServices() async {
   Get.put<StorageService>(StorageService());
-  // Get.put<ApiService>(ApiService());
+  Get.put<ApiService>(ApiService());
   // Get.put<SystemMessageController>(SystemMessageController());
   // Get.put<DeepLinkService>(DeepLinkService());
 }
