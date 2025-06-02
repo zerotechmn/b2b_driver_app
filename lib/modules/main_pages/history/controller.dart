@@ -14,11 +14,17 @@ class HistoryController extends GetxController {
   var startDate = DateTime.now().subtract(Duration(days: 7)).obs;
   var endDate = DateTime.now().obs;
 
-  var totalCredit = 0.0.obs;
   var totalDebit = 0.0.obs;
+  var totalCredit = 0.0.obs;
   var isLoading = true.obs;
 
   Rx<List<StatementModel>> statements = Rx<List<StatementModel>>([]);
+
+  @override
+  void onReady() {
+    super.onReady();
+    fetchStatements();
+  }
 
   updateStartDate(date) {
     startDate.value = date;
@@ -50,12 +56,20 @@ class HistoryController extends GetxController {
           DateFormat("yyyy-MM-dd", "mn_MN").format(startDate.value),
           DateFormat("yyyy-MM-dd", "mn_MN").format(endDate.value),
         );
+        for (var i = 0; i < statements.value.length; i++) {
+          final statement = statements.value[i];
+          if (statement.statementTypeEnum == "PURCHASE") {
+            totalCredit.value += statement.amount;
+          } else if (statement.statementTypeEnum == "CHARGE") {
+            totalDebit.value += statement.amount;
+          }
+        }
       }
     } on AppException catch (e) {
       e.showSnackbar();
     } finally {
       isLoading.value = false;
+      update();
     }
-    update();
   }
 }

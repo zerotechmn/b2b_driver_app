@@ -16,6 +16,7 @@ class AssetConstants {
   static final String mapLocationIcon = "assets/icons/map-location.svg";
   static final String userSquareIcon = "assets/icons/user-square.svg";
   static final String uploadBoxIcon = "assets/icons/upload-box.svg";
+  static final String logoutIcon = "assets/icons/log-out.svg";
 
   static final String searchIcon = "assets/icons/search.svg";
   static final String filterIcon = "assets/icons/filter.svg";

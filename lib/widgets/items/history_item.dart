@@ -1,14 +1,21 @@
 import 'package:b2b_driver_app/config/assets.dart';
+import 'package:b2b_driver_app/data/models/statement_model.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:b2b_driver_app/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 enum HistoryTypes { purchase, bonus, withdraw, charge }
 
 class HistoryItem extends StatelessWidget {
-  const HistoryItem({super.key, required this.historyType});
+  const HistoryItem({
+    super.key,
+    required this.historyType,
+    required this.statement,
+  });
 
+  final StatementModel statement;
   final HistoryTypes historyType;
 
   @override
@@ -19,9 +26,9 @@ class HistoryItem extends StatelessWidget {
     } else if (historyType == HistoryTypes.bonus) {
       type = "Бонус";
     } else if (historyType == HistoryTypes.withdraw) {
-      type = "Гарсан";
+      type = "Татсан";
     } else if (historyType == HistoryTypes.charge) {
-      type = "Цэгэглэлт";
+      type = "Орлого";
     }
     return SizedBox(
       width: double.infinity,
@@ -33,10 +40,17 @@ class HistoryItem extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.red[100],
+              color:
+                  (historyType == HistoryTypes.purchase ||
+                          historyType == HistoryTypes.withdraw)
+                      ? Colors.red[50]
+                      : Colors.green[50],
             ),
             child: SvgPicture.asset(
-              AssetConstants.uploadIcon,
+              (historyType == HistoryTypes.purchase ||
+                      historyType == HistoryTypes.withdraw)
+                  ? AssetConstants.uploadIcon
+                  : AssetConstants.downloadIcon,
               width: 24,
               height: 24,
               fit: BoxFit.scaleDown,
@@ -48,7 +62,10 @@ class HistoryItem extends StatelessWidget {
               children: [
                 Text(type, style: textTheme(context).titleMedium),
                 Text(
-                  "2025-04-14 22:55",
+                  DateFormat(
+                    "yyyy-MM-dd hh:mm",
+                    "mn_MN",
+                  ).format(statement.createdAt),
                   style: textTheme(
                     context,
                   ).bodyMedium!.copyWith(color: colors(context).labelSecondary),
@@ -60,13 +77,17 @@ class HistoryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                "+${100000.toCurrency()}",
-                style: textTheme(
-                  context,
-                ).titleMedium!.copyWith(color: colors(context).success),
+                "+${statement.amount.toInt().toCurrency()}",
+                style: textTheme(context).titleMedium!.copyWith(
+                  color:
+                      (historyType == HistoryTypes.purchase ||
+                              historyType == HistoryTypes.withdraw)
+                          ? colors(context).danger
+                          : colors(context).success,
+                ),
               ),
               Text(
-                1500000.toCurrency(),
+                statement.to.toInt().toCurrency(),
                 style: textTheme(
                   context,
                 ).bodyMedium!.copyWith(color: colors(context).labelSecondary),

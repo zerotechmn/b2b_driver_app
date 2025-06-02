@@ -1,4 +1,5 @@
 import 'package:b2b_driver_app/config/assets.dart';
+import 'package:b2b_driver_app/modules/main_pages/controller.dart';
 import 'package:b2b_driver_app/modules/main_pages/profile/controller.dart';
 import 'package:b2b_driver_app/routers/routers.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
@@ -16,6 +17,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProfileController controller = Get.find<ProfileController>();
+    HomeLayoutController layoutController = Get.find<HomeLayoutController>();
     return Scaffold(
       appBar: getHomeAppBar(context),
       backgroundColor: colors(context).backgroundSecondary,
@@ -24,6 +26,29 @@ class ProfileView extends StatelessWidget {
         child: Column(
           spacing: 16,
           children: [
+            Container(
+              height: 70,
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: colors(context).backgroundPrimary,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                spacing: 16,
+                children: [
+                  CircleAvatar(),
+                  Obx(
+                    () => Text(
+                      layoutController.headerName.value,
+                      style: textTheme(
+                        context,
+                      ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             MenuItem(
               onTap: () {
                 Get.toNamed(AppRouters.changePassword);
@@ -52,7 +77,7 @@ class ProfileView extends StatelessWidget {
                         ),
                   ),
               title: "Гарах",
-              icon: SvgPicture.asset(AssetConstants.lockIcon),
+              icon: SvgPicture.asset(AssetConstants.logoutIcon),
             ),
           ],
         ),

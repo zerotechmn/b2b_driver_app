@@ -24,6 +24,8 @@ dependencies:
   modal_bottom_sheet: ^3.0.0
   table_calendar: ^3.2.0
   skeletonizer: ^1.4.3
+  flutter_osm_plugin: ^0.70.4
+  geolocator: ^14.0.1
 
 dev_dependencies:
   flutter_test:

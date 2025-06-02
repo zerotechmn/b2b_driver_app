@@ -41,72 +41,82 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              Spacer(),
-              SvgPicture.asset(AssetConstants.logo),
-              const SizedBox(height: 45),
-              Input(
-                controller: _phoneNo,
-                hint: 'Утасны дугаар',
-                keyboardType: TextInputType.number,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.phoneIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.scaleDown,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Input(
-                controller: _password,
-                hint: 'Нууц үг',
-                isPassword: true,
-                showClearIcon: true,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.lockIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.scaleDown,
-                ),
-              ),
-              const SizedBox(height: 32),
-              GestureDetector(
-                onTap: () => Get.toNamed(AppRouters.reset),
-                child: RichText(
-                  text: TextSpan(
-                    style: textTheme(context).bodyMedium!.copyWith(
-                      color: colors(context).labelSecondary,
-                    ),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
                     children: [
-                      TextSpan(text: "Нууц үгээ мартсан уу? "),
-                      TextSpan(
-                        text: "Сэргээх",
-                        style: textTheme(context).bodyMedium!.copyWith(
-                          color: colors(context).labelSecondary,
-                          fontWeight: FontWeight.w500,
+                      Spacer(),
+                      SvgPicture.asset(AssetConstants.logo),
+                      const SizedBox(height: 45),
+                      Input(
+                        controller: _phoneNo,
+                        hint: 'Утасны дугаар',
+                        keyboardType: TextInputType.number,
+                        leadingIcon: SvgPicture.asset(
+                          AssetConstants.phoneIcon,
+                          width: 24,
+                          height: 24,
+                          fit: BoxFit.scaleDown,
                         ),
                       ),
+                      const SizedBox(height: 12),
+                      Input(
+                        controller: _password,
+                        hint: 'Нууц үг',
+                        isPassword: true,
+                        showClearIcon: true,
+                        leadingIcon: SvgPicture.asset(
+                          AssetConstants.lockIcon,
+                          width: 24,
+                          height: 24,
+                          fit: BoxFit.scaleDown,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      GestureDetector(
+                        onTap: () => Get.toNamed(AppRouters.reset),
+                        child: RichText(
+                          text: TextSpan(
+                            style: textTheme(context).bodyMedium!.copyWith(
+                              color: colors(context).labelSecondary,
+                            ),
+                            children: [
+                              TextSpan(text: "Нууц үгээ мартсан уу? "),
+                              TextSpan(
+                                text: "Сэргээх",
+                                style: textTheme(context).bodyMedium!.copyWith(
+                                  color: colors(context).labelSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Obx(
+                        () => Button(
+                          text: 'Нэвтрэх',
+                          onPressed: () {
+                            controller.login();
+                          },
+                          isLoading: controller.isLoading.value,
+                        ),
+                      ),
+                      Spacer(),
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 32),
-              Obx(
-                () => Button(
-                  text: 'Нэвтрэх',
-                  onPressed: () {
-                    controller.login();
-                  },
-                  isLoading: controller.isLoading.value,
-                ),
-              ),
-              Spacer(),
-            ],
+              ],
+            ),
           ),
         ),
       ),

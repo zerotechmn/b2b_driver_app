@@ -77,6 +77,7 @@ class AccountHistoryCard extends StatelessWidget {
                 itemCount: statements.length,
                 itemBuilder: (context, index) {
                   return HistoryItem(
+                    statement: statements[index],
                     historyType:
                         statements[index].statementTypeEnum == "PURCHASE"
                             ? HistoryTypes.purchase

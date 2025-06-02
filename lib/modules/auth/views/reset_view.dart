@@ -39,78 +39,81 @@ class _ResetViewState extends State<ResetView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Нууц үг сэргээх',
-          style: textTheme(
-            context,
-          ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
-        ),
-        leadingWidth: 40 + 16,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
-          child: SizedBox(
-            width: 40,
-            height: 40,
-            child: Material(
-              color: colors(context).backgroundSecondary,
-              borderRadius: BorderRadius.circular(12),
-              child: InkWell(
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            'Нууц үг сэргээх',
+            style: textTheme(
+              context,
+            ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
+          ),
+          leadingWidth: 40 + 16,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: Material(
+                color: colors(context).backgroundSecondary,
                 borderRadius: BorderRadius.circular(12),
-                onTap: () => Get.back(),
-                child: SvgPicture.asset(
-                  AssetConstants.arrowLeftIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.scaleDown,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => Get.back(),
+                  child: SvgPicture.asset(
+                    AssetConstants.arrowLeftIcon,
+                    width: 24,
+                    height: 24,
+                    fit: BoxFit.scaleDown,
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              SizedBox(height: 32),
-              Text(
-                "Нууц үгээ сэргээхийн тулд бүртгэлтэй утасны дугаараа оруулна уу",
-                textAlign: TextAlign.center,
-                style: textTheme(context).titleSmall,
-              ),
-              SizedBox(height: 35),
-              Input(
-                controller: _phoneNo,
-                hint: 'Утасны дугаар',
-                isAutoFocus: true,
-                keyboardType: TextInputType.number,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.phoneIcon,
-                  width: 24,
-                  height: 24,
-                  fit: BoxFit.scaleDown,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                SizedBox(height: 32),
+                Text(
+                  "Нууц үгээ сэргээхийн тулд бүртгэлтэй утасны дугаараа оруулна уу",
+                  textAlign: TextAlign.center,
+                  style: textTheme(context).titleSmall,
                 ),
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Obx(
-                  () => Button(
-                    text: 'Дараагийн алхам',
-                    isEnabled:
-                        controller.phoneNo.value.isNotEmpty &&
-                        controller.phoneNo.value.length == 8,
-                    onPressed: () {
-                      controller.sendCode();
-                    },
+                SizedBox(height: 35),
+                Input(
+                  controller: _phoneNo,
+                  hint: 'Утасны дугаар',
+                  isAutoFocus: true,
+                  keyboardType: TextInputType.number,
+                  leadingIcon: SvgPicture.asset(
+                    AssetConstants.phoneIcon,
+                    width: 24,
+                    height: 24,
+                    fit: BoxFit.scaleDown,
                   ),
                 ),
-              ),
-            ],
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Obx(
+                    () => Button(
+                      text: 'Дараагийн алхам',
+                      isEnabled:
+                          controller.phoneNo.value.isNotEmpty &&
+                          controller.phoneNo.value.length == 8,
+                      onPressed: () {
+                        controller.sendCode();
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
