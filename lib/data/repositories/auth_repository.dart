@@ -15,4 +15,40 @@ class AuthRepository {
     );
     return parseOrThrow(res.data, UserModel.fromJson);
   }
+
+  Future<UserModel> changePassword(id, oldPassword, newPassword) async {
+    final res = await apiService.call(
+      Apis.changePassword().copyWith(
+        data: {
+          "driverId": id,
+          "oldPassword": oldPassword,
+          "newPassword": newPassword,
+        },
+      ),
+    );
+    return parseOrThrow(res.data, UserModel.fromJson);
+  }
+
+  Future<UserModel> sendOtp(phoneNo) async {
+    final res = await apiService.call(
+      Apis.sendOtp().copyWith(data: {"phone": phoneNo}),
+    );
+    return parseOrThrow(res.data, UserModel.fromJson);
+  }
+
+  Future<UserModel> verifyOtp(phoneNo, otp) async {
+    final res = await apiService.call(
+      Apis.verifyOtp().copyWith(data: {"phone": phoneNo, "otp": otp}),
+    );
+    return parseOrThrow(res.data, UserModel.fromJson);
+  }
+
+  Future<UserModel> recoverPassword(phoneNo, newPassword) async {
+    final res = await apiService.call(
+      Apis.recoverPassword().copyWith(
+        data: {"phone": phoneNo, "newPassword": newPassword},
+      ),
+    );
+    return parseOrThrow(res.data, UserModel.fromJson);
+  }
 }

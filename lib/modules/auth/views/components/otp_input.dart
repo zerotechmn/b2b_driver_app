@@ -36,6 +36,8 @@ class _OTPInputState extends State<OTPInput> {
                 onChanged: (value) {
                   if (value.length == _maxLength) {
                     widget.onFinished(value);
+                    _controller.text = "";
+                    _focusNode.unfocus();
                   }
                   setState(() {});
                 },

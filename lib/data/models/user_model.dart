@@ -12,8 +12,8 @@ class UserModel {
   final String vendorId;
   final String registerNumber;
   final String carNumber;
-  final String cardId;
-  final VendorModel vendor;
+  final String? cardId;
+  final VendorModel? vendor;
 
   UserModel({
     required this.id,
@@ -23,8 +23,8 @@ class UserModel {
     required this.vendorId,
     required this.registerNumber,
     required this.carNumber,
-    required this.cardId,
-    required this.vendor,
+    this.cardId,
+    this.vendor,
   });
 
   /// **Factory method to create `UserModel` from JSON**

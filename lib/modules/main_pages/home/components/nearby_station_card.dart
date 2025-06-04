@@ -10,6 +10,9 @@ class NearbyStationCard extends StatefulWidget {
 }
 
 class _NearbyStationCardState extends State<NearbyStationCard> {
+  bool isLoading = true;
+  bool permissionDenied = false;
+
   @override
   void initState() {
     super.initState();
@@ -27,18 +30,16 @@ class _NearbyStationCardState extends State<NearbyStationCard> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+        permissionDenied = true;
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.',
-      );
+      permissionDenied = true;
     }
 
     var loc = await Geolocator.getCurrentPosition();
     debugPrint(loc.latitude.toString());
+    debugPrint(loc.longitude.toString());
   }
 
   @override
@@ -50,6 +51,21 @@ class _NearbyStationCardState extends State<NearbyStationCard> {
         borderRadius: BorderRadius.circular(15),
         color: colors(context).backgroundPrimary,
       ),
+      padding: EdgeInsets.all(16),
+      child:
+          isLoading
+              ? Center(
+                child: CircularProgressIndicator(
+                  color: colors(context).primary,
+                ),
+              )
+              : (permissionDenied
+                  ? Column(
+                    children: [
+                      Text("Та байршлын тохиргоог зөвшөөрөөгүй байна"),
+                    ],
+                  )
+                  : null),
     );
   }
 }

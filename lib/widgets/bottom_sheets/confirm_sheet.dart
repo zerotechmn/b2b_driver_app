@@ -10,17 +10,19 @@ class ConfirmSheet extends StatelessWidget {
     required this.title,
     required this.description,
     required this.confirmText,
-    required this.cancelText,
+    this.cancelText,
     this.onConfirm,
     this.onCancel,
+    this.type = ButtonTypes.danger,
   });
 
   final String title;
   final String description;
   final String confirmText;
-  final String cancelText;
+  final String? cancelText;
   final Function()? onConfirm;
   final Function()? onCancel;
+  final ButtonTypes type;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class ConfirmSheet extends StatelessWidget {
               SizedBox(height: 32),
               Button(
                 text: confirmText,
-                type: ButtonTypes.danger,
+                type: type,
                 onPressed: () {
                   if (onConfirm != null) {
                     onConfirm!();
@@ -62,17 +64,20 @@ class ConfirmSheet extends StatelessWidget {
                   Get.back();
                 },
               ),
-              SizedBox(height: 16),
-              Button(
-                text: cancelText,
-                type: ButtonTypes.secondary,
-                onPressed: () {
-                  if (onCancel != null) {
-                    onCancel!();
-                  }
-                  Get.back();
-                },
-              ),
+              if (cancelText != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Button(
+                    text: cancelText,
+                    type: ButtonTypes.secondary,
+                    onPressed: () {
+                      if (onCancel != null) {
+                        onCancel!();
+                      }
+                      Get.back();
+                    },
+                  ),
+                ),
             ],
           ),
         ),

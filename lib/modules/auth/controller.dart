@@ -1,11 +1,18 @@
 import 'dart:async';
 
+import 'package:b2b_driver_app/data/models/user_model.dart';
 import 'package:b2b_driver_app/data/repositories/auth_repository.dart';
 import 'package:b2b_driver_app/routers/routers.dart';
 import 'package:b2b_driver_app/services/storage_service.dart';
+import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:b2b_driver_app/utils/exceptions.dart';
 import 'package:b2b_driver_app/utils/extension.dart';
+import 'package:b2b_driver_app/utils/helpers.dart';
+import 'package:b2b_driver_app/widgets/bottom_sheets/confirm_sheet.dart';
+import 'package:b2b_driver_app/widgets/buttons/button.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AuthController extends GetxController {
   final AuthRepository authRepository = AuthRepository();
@@ -18,7 +25,7 @@ class AuthController extends GetxController {
 
   var isLoading = false.obs;
 
-  var countdown = 60.obs;
+  var countdown = 120.obs;
   Timer? _timer;
 
   void login() async {
@@ -34,46 +41,78 @@ class AuthController extends GetxController {
     }
   }
 
-  void sendCode() {
-    // Implement send & resend code logic here
-    // For example, send a new OTP to the user's phone number
-    startCountdown();
-    // Navigate to the OTP screen
-    // If current route is not OTP, navigate to OTP
-    if (Get.currentRoute != AppRouters.otp) {
-      Get.toNamed(AppRouters.otp);
+  void sendCode() async {
+    showLoadingDialog();
+    try {
+      await authRepository.sendOtp(phoneNo.value);
+      hideLoadingDialog();
+      Get.snackbar("Амжилттай", "Нэг удаагийн нууц үг илгээгдлээ");
+      startCountdown();
+      // Navigate to the OTP screen
+      // If current route is not OTP, navigate to OTP
+      if (Get.currentRoute != AppRouters.otp) {
+        Get.toNamed(AppRouters.otp);
+      }
+    } on AppException catch (e) {
+      hideLoadingDialog();
+      e.showSnackbar();
     }
   }
 
-  void verifyCode(String code) {
-    // Implement OTP verification logic here
-    // For example, check if the entered code matches the sent OTP
-    if (code == "1234") {
-      // Example condition
+  void verifyCode(String code) async {
+    if (code.length != 4) {
+      return;
+    }
+    showLoadingDialog();
+    try {
+      await authRepository.verifyOtp(phoneNo.value, code);
+      hideLoadingDialog();
       newPassword.value = "";
       confirmPassword.value = "";
       Get.offNamed(AppRouters.resetPassword);
-    } else {
-      Get.snackbar("Error", "Invalid OTP");
+    } on AppException catch (e) {
+      hideLoadingDialog();
+      e.showSnackbar();
     }
   }
 
   void resetPassword() async {
-    // Implement password reset logic here
-    // For example, call an API to reset the password
-    // and show a success bottom sheet
     if (newPassword.value == confirmPassword.value) {
-      // Example condition
-      // Get.offNamed(AppRouters.login);
+      showLoadingDialog();
+      try {
+        await authRepository.recoverPassword(phoneNo.value, newPassword.value);
+        hideLoadingDialog();
+        newPassword.value = "";
+        confirmPassword.value = "";
+        showMaterialModalBottomSheet(
+          expand: false,
+          context: Get.context!,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          isDismissible: false,
+          backgroundColor: colors(Get.context!).backgroundPrimary,
+          builder:
+              (context) => ConfirmSheet(
+                title: "Амжилттай",
+                description: "Нууц үг амжилттай солигдлоо",
+                confirmText: "Нэвтрэх",
+                onConfirm: () {
+                  Get.offAllNamed(AppRouters.login);
+                },
+                type: ButtonTypes.primary,
+              ),
+        );
+      } on AppException catch (e) {
+        hideLoadingDialog();
+        e.showSnackbar();
+      }
     } else {
-      Get.snackbar("Error", "Passwords do not match");
+      Get.snackbar("Уучлаарай", "Нууц үг таарахгүй байна");
     }
   }
 
   void toChangePassword() {
-    // Implement navigation to change password screen
-    // For example, navigate to the change password screen
-    // and clear the password fields
     password.value = "";
     newPassword.value = "";
     confirmPassword.value = "";
@@ -81,13 +120,48 @@ class AuthController extends GetxController {
   }
 
   void changePassword() async {
-    // Implement password change logic here
-    // For example, call an API to change the password
+    if (password.value == newPassword.value) {
+      Get.snackbar("Уучлаарай", "Шинэ нууц үг хуучин нууц үгтэй үжил байна");
+      return;
+    }
     if (newPassword.value == confirmPassword.value) {
-      // Example condition
-      // Get.offNamed(AppRouters.home);
+      showLoadingDialog();
+      try {
+        final UserModel? user = await storageService.readJson<UserModel>(
+          "user",
+          (json) => UserModel.fromJson(json),
+        );
+        await authRepository.changePassword(
+          user!.id,
+          password.value,
+          newPassword.value,
+        );
+        hideLoadingDialog();
+        showMaterialModalBottomSheet(
+          expand: false,
+          context: Get.context!,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          isDismissible: false,
+          backgroundColor: colors(Get.context!).backgroundPrimary,
+          builder:
+              (context) => ConfirmSheet(
+                title: "Амжилттай",
+                description: "Нууц үг амжилттай солигдлоо",
+                confirmText: "Нүүр хуудас",
+                onConfirm: () {
+                  Get.offAllNamed(AppRouters.home);
+                },
+                type: ButtonTypes.primary,
+              ),
+        );
+      } on AppException catch (e) {
+        hideLoadingDialog();
+        e.showSnackbar();
+      }
     } else {
-      Get.snackbar("Error", "Passwords do not match");
+      Get.snackbar("Уучлаарай", "Нууц үг таарахгүй байна");
     }
   }
 
@@ -111,7 +185,7 @@ class AuthController extends GetxController {
   }
 
   void startCountdown() {
-    countdown.value = 60;
+    countdown.value = 120;
     _timer?.cancel();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (countdown.value > 0) {

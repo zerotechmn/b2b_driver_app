@@ -1,5 +1,8 @@
+import 'package:b2b_driver_app/theme/palette.dart';
 import 'package:b2b_driver_app/utils/exceptions.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:get/get.dart';
 
 T parseOrThrow<T>(
   Map<String, dynamic> json,
@@ -32,5 +35,46 @@ List<T> parseListOrThrow<T>(
     throw AppException(
       "Алдаа гарсан тул та хэсэг хугацааны дараа дахин оролдоно уу",
     );
+  }
+}
+
+void showLoadingDialog() {
+  var brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
+  Future.delayed(Duration.zero, () {
+    if (Get.isDialogOpen == false) {
+      Get.dialog(
+        Center(
+          child: Container(
+            width: 84,
+            height: 84,
+            decoration: BoxDecoration(
+              color:
+                  brightness == Brightness.dark ? Colors.black : Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            padding: EdgeInsets.all(24),
+            child: CircularProgressIndicator(
+              color: Palette.primary,
+              backgroundColor: Palette.background[200],
+            ),
+          ),
+        ),
+        barrierDismissible: false,
+      );
+
+      // Auto-close the dialog after 10 seconds if still open
+      Future.delayed(const Duration(seconds: 10), () {
+        if (Get.isDialogOpen == true) {
+          Get.back(); // closes the dialog
+        }
+      });
+    }
+  });
+}
+
+void hideLoadingDialog() {
+  if (Get.isDialogOpen == true) {
+    Get.back();
   }
 }

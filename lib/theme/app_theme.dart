@@ -36,6 +36,7 @@ class AppTheme {
         color: Palette.label[100],
       ),
     ),
+    bottomSheetTheme: BottomSheetThemeData(backgroundColor: Palette.background),
     extensions: <ThemeExtension<AppColors>>[
       AppColors(
         primary: Palette.primary,
@@ -85,6 +86,9 @@ class AppTheme {
       unselectedLabelStyle: AppTextStyles.bodyMedium.copyWith(
         color: Palette.label[600],
       ),
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: Palette.background[700],
     ),
     extensions: <ThemeExtension<AppColors>>[
       AppColors(

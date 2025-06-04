@@ -9,6 +9,31 @@ class Apis {
         path: "driver-app/login",
         method: "POST",
       );
+  static var changePassword =
+      () => RequestOptions(
+        baseUrl: Env.baseUrl,
+        path: "driver-app/change-password",
+        method: "POST",
+      );
+
+  static var sendOtp =
+      () => RequestOptions(
+        baseUrl: Env.baseUrl,
+        path: "driver-app/send-otp",
+        method: "POST",
+      );
+  static var verifyOtp =
+      () => RequestOptions(
+        baseUrl: Env.baseUrl,
+        path: "driver-app/verify-otp",
+        method: "POST",
+      );
+  static var recoverPassword =
+      () => RequestOptions(
+        baseUrl: Env.baseUrl,
+        path: "driver-app/recover-password",
+        method: "POST",
+      );
 
   static var fetchCardDetail =
       (String id) => RequestOptions(

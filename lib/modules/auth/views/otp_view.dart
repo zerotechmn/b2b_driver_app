@@ -77,7 +77,7 @@ class OtpView extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 30),
                         child: Text(
-                          "00:${controller.countdown.value.toString().padLeft(2, '0')}",
+                          "${(controller.countdown.value ~/ 60).toString().padLeft(2, '0')}:${(controller.countdown.value % 60).toString().padLeft(2, '0')}",
                           style: textTheme(
                             context,
                           ).titleSmall!.copyWith(fontWeight: FontWeight.w600),

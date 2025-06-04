@@ -79,6 +79,7 @@ class _LoginViewState extends State<LoginView> {
                           height: 24,
                           fit: BoxFit.scaleDown,
                         ),
+                        maxLength: 32,
                       ),
                       const SizedBox(height: 32),
                       GestureDetector(
