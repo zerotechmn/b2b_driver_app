@@ -1,6 +1,8 @@
+import 'package:b2b_driver_app/modules/main_pages/station_pages/controller.dart';
 import 'package:b2b_driver_app/widgets/bottom_sheets/map_filter_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:get/get.dart';
 
 class StationMapView extends StatefulWidget {
   const StationMapView({super.key});
@@ -10,9 +12,46 @@ class StationMapView extends StatefulWidget {
 }
 
 class _StationMapViewState extends State<StationMapView> {
+  TextEditingController searchController = TextEditingController();
   MapController controller = MapController(
     initPosition: GeoPoint(latitude: 47.9094, longitude: 106.8819),
   );
+
+  final stationController = Get.find<StationController>();
+
+  @override
+  void initState() {
+    super.initState();
+    searchController.text = stationController.searchInput.value;
+    searchController.addListener(() {
+      stationController.setSearchInput(searchController.text);
+    });
+    // ever(stationController.stations, (stations) async {
+    //   // Remove existing markers if needed
+    //   // await controller.removeMarkers(geoPoints: controller.markers);
+    //   // Add new markers
+    //   for (final station in stations) {
+    //     if (station.lat == null ||
+    //         station.lat!.isEmpty ||
+    //         station.long == null ||
+    //         station.long!.isEmpty) {
+    //       continue;
+    //     }
+    //     debugPrint(
+    //       "Adding marker for station: ${station.name} at (${station.lat}, ${station.long})",
+    //     );
+    //     controller.addMarker(
+    //       GeoPoint(
+    //         latitude: double.parse(station.lat!),
+    //         longitude: double.parse(station.long!),
+    //       ),
+    //       markerIcon: MarkerIcon(
+    //         icon: Icon(Icons.local_gas_station, color: Colors.blue, size: 40),
+    //       ),
+    //     );
+    //   }
+    // });
+  }
 
   @override
   void dispose() {

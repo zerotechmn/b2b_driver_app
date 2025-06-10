@@ -1,4 +1,4 @@
-import 'package:b2b_driver_app/modules/main_pages/controller.dart';
+import 'package:b2b_driver_app/modules/main_pages/station_pages/controller.dart';
 import 'package:b2b_driver_app/modules/main_pages/station_pages/list/view.dart';
 import 'package:b2b_driver_app/modules/main_pages/station_pages/map/view.dart';
 import 'package:b2b_driver_app/widgets/segmented_control.dart';
@@ -12,13 +12,13 @@ class StationLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeLayoutController controller = Get.find<HomeLayoutController>();
+    StationController controller = Get.find<StationController>();
     return Scaffold(
       body: Stack(
         children: [
           Obx(
             () => IndexedStack(
-              index: controller.currentStationIndex.value,
+              index: controller.tabIndex.value,
               children: _pages,
             ),
           ),
@@ -31,9 +31,9 @@ class StationLayout extends StatelessWidget {
             child: Obx(
               () => CustomSegmentedControl(
                 segments: ["Газрын зураг", "Жагсаалт"],
-                currentIndex: controller.currentStationIndex.value,
+                currentIndex: controller.tabIndex.value,
                 onChange: (index) {
-                  controller.currentStationIndex.value = index;
+                  controller.tabIndex.value = index;
                 },
               ),
             ),

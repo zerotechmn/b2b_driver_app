@@ -51,9 +51,17 @@ class Apis {
       );
 
   static var fetchGasStations =
-      () => RequestOptions(
+      ({String? province, String? district}) => RequestOptions(
         baseUrl: Env.baseUrl,
         path: "driver-app/gas-stations",
+        method: "GET",
+        queryParameters: {"aimagHot": province, "duuregSum": district},
+      );
+
+  static var fetchAddresses =
+      () => RequestOptions(
+        baseUrl: Env.baseUrl,
+        path: "driver-app/address-list",
         method: "GET",
       );
 }

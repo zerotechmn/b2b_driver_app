@@ -1,10 +1,13 @@
 import 'package:b2b_driver_app/config/assets.dart';
+import 'package:b2b_driver_app/data/models/station_model.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class BranchItem extends StatelessWidget {
-  const BranchItem({super.key});
+  const BranchItem({super.key, required this.station});
+
+  final StationModel station;
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +31,28 @@ class BranchItem extends StatelessWidget {
               spacing: 16,
               children: [
                 SvgPicture.asset(AssetConstants.locationPinIcon),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "№23 Зайсан салбар",
-                      style: textTheme(
-                        context,
-                      ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      "ХУД, 8-р хороо, Зайсан толгой",
-                      style: textTheme(context).bodyMedium!.copyWith(
-                        color: colors(context).labelSecondary,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        station.name,
+                        style: textTheme(
+                          context,
+                        ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                      Text(
+                        station.address ?? "Хаяг байхгүй",
+                        style: textTheme(context).bodyMedium!.copyWith(
+                          color: colors(context).labelSecondary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -58,45 +67,49 @@ class BranchItem extends StatelessWidget {
               ),
               color: colors(context).backgroundPrimary,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  spacing: 4,
-                  children: [
-                    SvgPicture.asset(AssetConstants.timeSmallIcon),
-                    Text(
-                      "24/7",
-                      style: textTheme(
-                        context,
-                      ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                Row(
-                  spacing: 4,
-                  children: [
-                    SvgPicture.asset(AssetConstants.locationArrowSmallIcon),
-                    Text(
-                      "5.8 km",
-                      style: textTheme(
-                        context,
-                      ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-                Flexible(
-                  child: Text(
-                    "Түр ажиллахгүй",
-                    style: textTheme(context).titleSmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colors(context).primary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                spacing: 16,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    spacing: 4,
+                    children: [
+                      SvgPicture.asset(AssetConstants.timeSmallIcon),
+                      Text(
+                        station.additionalInfo?.workingHours ?? "NaN",
+                        style: textTheme(
+                          context,
+                        ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  Row(
+                    spacing: 4,
+                    children: [
+                      SvgPicture.asset(AssetConstants.locationArrowSmallIcon),
+                      Text(
+                        "5.8 km",
+                        style: textTheme(
+                          context,
+                        ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                  // Flexible(
+                  //   child: Text(
+                  //     "Түр ажиллахгүй",
+                  //     style: textTheme(context).titleSmall!.copyWith(
+                  //       fontWeight: FontWeight.w500,
+                  //       color: colors(context).primary,
+                  //     ),
+                  //     maxLines: 1,
+                  //     overflow: TextOverflow.ellipsis,
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
           ),
         ],

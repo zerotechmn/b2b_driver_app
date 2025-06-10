@@ -1,4 +1,5 @@
 import 'package:b2b_driver_app/config/apis.dart';
+import 'package:b2b_driver_app/data/models/address_model.dart';
 import 'package:b2b_driver_app/data/models/card_model.dart';
 import 'package:b2b_driver_app/data/models/statement_model.dart';
 import 'package:b2b_driver_app/data/models/station_model.dart';
@@ -24,5 +25,10 @@ class UserRepository {
   Future<List<StationModel>> fetchGasStations() async {
     final res = await apiService.call(Apis.fetchGasStations());
     return parseListOrThrow(res.data, StationModel.fromJson);
+  }
+
+  Future<List<AddressModel>> fetchAddresses() async {
+    final res = await apiService.call(Apis.fetchAddresses());
+    return parseListOrThrow(res.data, AddressModel.fromJson);
   }
 }

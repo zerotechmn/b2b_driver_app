@@ -29,6 +29,11 @@ class StorageService extends GetxService {
     await storage.write(key: key, value: jsonString);
   }
 
+  Future<void> writeJsonList<T>(String key, List<T> model) async {
+    String jsonString = jsonEncode(model);
+    await storage.write(key: key, value: jsonString);
+  }
+
   /// Read JSON model data
   Future<T?> readJson<T>(
     String key,
@@ -37,6 +42,18 @@ class StorageService extends GetxService {
     String? jsonString = await storage.read(key: key);
     if (jsonString == null) return null;
     return fromJson(jsonDecode(jsonString));
+  }
+
+  Future<List<T?>> readJsonList<T>(
+    String key,
+    T Function(Map<String, dynamic>) fromJson,
+  ) async {
+    String? jsonString = await storage.read(key: key);
+    if (jsonString == null) return [];
+    List<dynamic> jsonList = jsonDecode(jsonString);
+    return jsonList
+        .map((item) => fromJson(item as Map<String, dynamic>))
+        .toList();
   }
 
   /// Write a string value

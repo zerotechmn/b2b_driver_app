@@ -6,7 +6,6 @@ class HomeLayoutController extends GetxController {
   StorageService storageService = Get.find<StorageService>();
 
   var currentIndex = 0.obs;
-  var currentStationIndex = 0.obs;
 
   var headerName = "".obs;
 
