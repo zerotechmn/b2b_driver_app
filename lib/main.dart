@@ -22,8 +22,9 @@ void main() async {
   runApp(
     GetMaterialApp(
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      // darkTheme: AppTheme.darkTheme,
+      // themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       initialRoute: AppRouters.splash,
       getPages: AppPages.routes,
       builder:

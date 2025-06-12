@@ -73,24 +73,32 @@ class BranchItem extends StatelessWidget {
                 spacing: 16,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
-                    spacing: 4,
-                    children: [
-                      SvgPicture.asset(AssetConstants.timeSmallIcon),
-                      Text(
-                        station.additionalInfo?.workingHours ?? "NaN",
-                        style: textTheme(
-                          context,
-                        ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                  Flexible(
+                    child: Row(
+                      spacing: 4,
+                      children: [
+                        SvgPicture.asset(AssetConstants.timeSmallIcon),
+                        Flexible(
+                          child: Text(
+                            station.additionalInfo?.workingHours ?? "NaN",
+                            style: textTheme(
+                              context,
+                            ).titleSmall!.copyWith(fontWeight: FontWeight.w500),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Row(
                     spacing: 4,
                     children: [
                       SvgPicture.asset(AssetConstants.locationArrowSmallIcon),
                       Text(
-                        "5.8 km",
+                        station.distanceKm != null
+                            ? "${station.distanceKm!.toStringAsFixed(1)} km"
+                            : "-",
                         style: textTheme(
                           context,
                         ).titleSmall!.copyWith(fontWeight: FontWeight.w500),

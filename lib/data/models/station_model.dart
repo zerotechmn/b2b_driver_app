@@ -19,6 +19,9 @@ class StationModel {
   final List<StationProductModel>? products;
   final StationAdditionalInfoModel? additionalInfo;
 
+  @JsonKey(ignore: true)
+  double? distanceKm;
+
   StationModel({
     required this.id,
     required this.gasStationId,

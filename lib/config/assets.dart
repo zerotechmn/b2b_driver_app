@@ -27,11 +27,16 @@ class AssetConstants {
   static final String locationPinIcon = "assets/icons/location-pin.svg";
   static final String locationPinOutlinedIcon =
       "assets/icons/location-pin-outlined.svg";
+  static final String locationCrosshairsIcon =
+      "assets/icons/location-crosshairs.svg";
   static final String lockViewFinderIcon = "assets/icons/lock-viewfinder.svg";
   static final String creditCardConvertIcon =
       "assets/icons/credit-card-convert.svg";
 
+  static final String locationArrowActiveIcon =
+      "assets/icons/location-arrow-active.svg";
   static final String locationArrowSmallIcon =
       "assets/icons/location-arrow-sm.svg";
+  static final String timeActiveIcon = "assets/icons/time-active.svg";
   static final String timeSmallIcon = "assets/icons/time-sm.svg";
 }

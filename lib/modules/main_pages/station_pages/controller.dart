@@ -21,7 +21,9 @@ class StationController extends GetxController {
   Rx<List<StationModel>> stations = Rx<List<StationModel>>([]);
   Rx<List<AddressModel>> addresses = Rx<List<AddressModel>>([]);
   Rx<List<String>> stationServices = Rx<List<String>>([]);
-  Rx<List<String>> fuelTypes = Rx<List<String>>([]);
+  Rx<List<StationProductModel>> stationProducts = Rx<List<StationProductModel>>(
+    [],
+  );
 
   Rx<String> searchInput = Rx<String>("");
   Rx<String> selectedStationService = Rx<String>("");
@@ -59,6 +61,15 @@ class StationController extends GetxController {
             .toSet()
             .toList()
           ..sort((a, b) => a.compareTo(b));
+    // Extract unique station products by product code
+    stationProducts.value =
+        _stationList
+            .expand((station) => station.products ?? [])
+            .where((product) => product.productCode.isNotEmpty)
+            .toSet()
+            .toList()
+            .cast<StationProductModel>()
+          ..sort((a, b) => a.productCode.compareTo(b.productCode));
     isLoading.value = false;
     update();
   }
