@@ -35,126 +35,150 @@ class _MapFilterSheetState extends State<MapFilterSheet> {
         maxChildSize: 0.8,
         expand: false,
         snap: true,
-        snapSizes: [0.3, 0.4, 0.8],
+        snapSizes: [0.3, 0.5, 0.8],
         builder:
-            (context, scrollController) => Column(
-              children: [
-                SizedBox(height: 16),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onVerticalDragStart: (_) {
-                    _lastSize = _sheetController.size;
-                  },
-                  onVerticalDragUpdate: (details) {
-                    final newSize = (_lastSize -
-                            details.primaryDelta! /
-                                MediaQuery.of(context).size.height)
-                        .clamp(0.3, 0.8);
-                    _sheetController.jumpTo(newSize);
-                  },
-                  child: DragHandler(),
-                ),
-                Column(
-                  spacing: 16,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        spacing: 16,
-                        children: [
-                          Expanded(
-                            child: Input(
-                              hint: "Салбар хайх",
-                              controller: controller.searchController,
-                              leadingIcon: SvgPicture.asset(
-                                AssetConstants.searchIcon,
-                              ),
-                            ),
-                          ),
-                          SmallButton(
-                            icon: SvgPicture.asset(AssetConstants.filterIcon),
-                            width: 50,
-                            height: 50,
-                            borderRadius: 16,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 45,
-                      width: double.infinity,
-                      child: GetBuilder<StationController>(
-                        builder: (controller) {
-                          List<String> services =
-                              controller.stationServices.value;
-                          return ListView.separated(
-                            itemCount: services.length,
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return FilterItem(
-                                name: services[index],
-                                isSelected:
-                                    controller.selectedStationService.value ==
-                                    services[index],
-                                onTap:
-                                    () => controller.setSelectedService(
-                                      services[index],
-                                    ),
-                              );
-                            },
-                            separatorBuilder:
-                                (context, index) => SizedBox(width: 8),
+            (context, scrollController) => LayoutBuilder(
+              builder: (context, constraints) {
+                return SizedBox(
+                  height: constraints.maxHeight,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onVerticalDragStart: (details) {
+                          _lastSize = _sheetController.size;
+                        },
+                        onVerticalDragUpdate: (details) {
+                          final newSize =
+                              (_lastSize -
+                                  details.primaryDelta! /
+                                      MediaQuery.of(context).size.height);
+                          _lastSize = newSize;
+                          _sheetController.jumpTo(newSize);
+                        },
+                        onVerticalDragEnd: (details) {
+                          final newSize = (_lastSize -
+                                  details.primaryVelocity! /
+                                      MediaQuery.of(context).size.height)
+                              .clamp(0.3, 0.8);
+                          _sheetController.animateTo(
+                            newSize,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
                           );
                         },
-                      ),
-                    ),
-                    SizedBox(height: 0),
-                  ],
-                ),
-                // Only the ListView below is scrollable
-                Expanded(
-                  child: GetBuilder<StationController>(
-                    builder: (controller) {
-                      List<StationModel> stations = controller.stations.value;
-                      if (controller.isLoading.value) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            color: colors(context).primary,
-                          ),
-                        );
-                      }
-                      if (stations.isEmpty) {
-                        return Center(
-                          child: Text(
-                            "Салбар олдсонгүй",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        );
-                      }
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          await controller.fetchGasStations();
-                        },
-                        child: ListView.separated(
-                          controller: scrollController,
-                          padding: EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          ),
-                          itemCount: stations.length,
-                          itemBuilder: (context, index) {
-                            return BranchItem(station: stations[index]);
-                          },
-                          separatorBuilder:
-                              (context, index) => SizedBox(height: 16),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 16),
+                            DragHandler(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Row(
+                                spacing: 16,
+                                children: [
+                                  Expanded(
+                                    child: Input(
+                                      hint: "Салбар хайх",
+                                      controller: controller.searchController,
+                                      leadingIcon: SvgPicture.asset(
+                                        AssetConstants.searchIcon,
+                                      ),
+                                    ),
+                                  ),
+                                  SmallButton(
+                                    icon: SvgPicture.asset(
+                                      AssetConstants.filterIcon,
+                                    ),
+                                    width: 50,
+                                    height: 50,
+                                    borderRadius: 16,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                          ],
                         ),
-                      );
-                    },
+                      ),
+                      SizedBox(
+                        height: 45,
+                        width: double.infinity,
+                        child: GetBuilder<StationController>(
+                          builder: (controller) {
+                            List<String> services =
+                                controller.stationServices.value;
+                            return ListView.separated(
+                              itemCount: services.length,
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return FilterItem(
+                                  name: services[index],
+                                  isSelected:
+                                      controller.selectedStationService.value ==
+                                      services[index],
+                                  onTap:
+                                      () => controller.setSelectedService(
+                                        services[index],
+                                      ),
+                                );
+                              },
+                              separatorBuilder:
+                                  (context, index) => SizedBox(width: 8),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      // Only the ListView below is scrollable
+                      Expanded(
+                        child: GetBuilder<StationController>(
+                          builder: (controller) {
+                            List<StationModel> stations =
+                                controller.stations.value;
+                            if (controller.isLoading.value) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: colors(context).primary,
+                                ),
+                              );
+                            }
+                            if (stations.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  "Салбар олдсонгүй",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              );
+                            }
+                            return RefreshIndicator(
+                              onRefresh: () async {
+                                await controller.fetchGasStations();
+                              },
+                              child: ListView.separated(
+                                controller: scrollController,
+                                padding: EdgeInsets.only(
+                                  left: 16,
+                                  right: 16,
+                                  bottom: 16,
+                                ),
+                                itemCount: stations.length,
+                                itemBuilder: (context, index) {
+                                  return BranchItem(station: stations[index]);
+                                },
+                                separatorBuilder:
+                                    (context, index) => SizedBox(height: 16),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
       ),
     );
