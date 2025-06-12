@@ -21,9 +21,11 @@ class StationController extends GetxController {
   Rx<List<StationModel>> stations = Rx<List<StationModel>>([]);
   Rx<List<AddressModel>> addresses = Rx<List<AddressModel>>([]);
   Rx<List<String>> stationServices = Rx<List<String>>([]);
+  Rx<List<String>> fuelTypes = Rx<List<String>>([]);
 
   Rx<String> searchInput = Rx<String>("");
   Rx<String> selectedStationService = Rx<String>("");
+  Rx<String> selectedFuelType = Rx<String>("");
   Rx<String> selectedProvince = Rx<String>("");
   Rx<String> selectedDistrict = Rx<String>("");
 

@@ -11,8 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class MapFilterSheet extends StatelessWidget {
+class MapFilterSheet extends StatefulWidget {
   const MapFilterSheet({super.key});
+
+  @override
+  State<MapFilterSheet> createState() => _MapFilterSheetState();
+}
+
+class _MapFilterSheetState extends State<MapFilterSheet> {
+  final DraggableScrollableController _sheetController =
+      DraggableScrollableController();
+  double _lastSize = 0.3;
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +29,31 @@ class MapFilterSheet extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: DraggableScrollableSheet(
-        initialChildSize: 0.2,
-        minChildSize: 0.2,
+        controller: _sheetController,
+        initialChildSize: 0.3,
+        minChildSize: 0.3,
         maxChildSize: 0.8,
         expand: false,
         snap: true,
-        snapSizes: [0.2, 0.4, 0.8],
+        snapSizes: [0.3, 0.4, 0.8],
         builder:
             (context, scrollController) => Column(
               children: [
                 SizedBox(height: 16),
-                DragHandler(),
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onVerticalDragStart: (_) {
+                    _lastSize = _sheetController.size;
+                  },
+                  onVerticalDragUpdate: (details) {
+                    final newSize = (_lastSize -
+                            details.primaryDelta! /
+                                MediaQuery.of(context).size.height)
+                        .clamp(0.3, 0.8);
+                    _sheetController.jumpTo(newSize);
+                  },
+                  child: DragHandler(),
+                ),
                 Column(
                   spacing: 16,
                   children: [
