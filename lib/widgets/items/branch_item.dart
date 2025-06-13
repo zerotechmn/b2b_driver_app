@@ -5,26 +5,51 @@ import 'package:b2b_driver_app/widgets/bottom_sheets/branch_detail_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
 class BranchItem extends StatelessWidget {
-  const BranchItem({super.key, required this.station});
+  const BranchItem({
+    super.key,
+    required this.station,
+    this.onCenterMap,
+    this.disableTap = false,
+  });
 
   final StationModel station;
+  final void Function(GeoPoint point)? onCenterMap;
+  final bool disableTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap:
-          () => showMaterialModalBottomSheet(
-            expand: false,
-            context: context,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(32),
-            ),
-            backgroundColor: colors(context).backgroundPrimary,
-            builder: (context) => BranchDetailSheet(station: station),
-          ),
+          disableTap
+              ? null
+              : () {
+                // center map to this station
+                if (station.lat != null &&
+                    station.long != null &&
+                    station.lat!.isNotEmpty &&
+                    station.long!.isNotEmpty) {
+                  final point = GeoPoint(
+                    latitude: double.parse(station.lat!),
+                    longitude: double.parse(station.long!),
+                  );
+                  if (onCenterMap != null) {
+                    onCenterMap!(point);
+                  }
+                }
+                showMaterialModalBottomSheet(
+                  expand: false,
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                  backgroundColor: colors(context).backgroundPrimary,
+                  builder: (context) => BranchDetailSheet(station: station),
+                );
+              },
       child: Container(
         height: 120,
         width: double.infinity,

@@ -8,17 +8,20 @@ import 'package:b2b_driver_app/widgets/inputs/input.dart';
 import 'package:b2b_driver_app/widgets/items/branch_item.dart';
 import 'package:b2b_driver_app/widgets/items/filter_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class MapFilterSheet extends StatefulWidget {
-  const MapFilterSheet({super.key});
+class MapBranchSheet extends StatefulWidget {
+  const MapBranchSheet({super.key, this.onCenterMap});
+
+  final void Function(GeoPoint point)? onCenterMap;
 
   @override
-  State<MapFilterSheet> createState() => _MapFilterSheetState();
+  State<MapBranchSheet> createState() => _MapBranchSheetState();
 }
 
-class _MapFilterSheetState extends State<MapFilterSheet> {
+class _MapBranchSheetState extends State<MapBranchSheet> {
   final DraggableScrollableController _sheetController =
       DraggableScrollableController();
   double _lastSize = 0.3;
@@ -166,7 +169,10 @@ class _MapFilterSheetState extends State<MapFilterSheet> {
                                 ),
                                 itemCount: stations.length,
                                 itemBuilder: (context, index) {
-                                  return BranchItem(station: stations[index]);
+                                  return BranchItem(
+                                    station: stations[index],
+                                    onCenterMap: widget.onCenterMap,
+                                  );
                                 },
                                 separatorBuilder:
                                     (context, index) => SizedBox(height: 16),

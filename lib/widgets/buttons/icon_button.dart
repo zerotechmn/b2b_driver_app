@@ -20,6 +20,7 @@ class CustomIconButton extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(size / 2)),
       child: Material(
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(size / 2),
         child: InkWell(
           onTap: onPressed,

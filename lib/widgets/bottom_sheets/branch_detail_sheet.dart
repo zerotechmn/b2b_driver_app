@@ -30,7 +30,7 @@ class BranchDetailSheet extends StatelessWidget {
             children: [
               DragHandler(),
               SizedBox(height: 16),
-              BranchItem(station: station),
+              BranchItem(station: station, disableTap: true),
               SizedBox(height: 16),
               if (station.lat != null && station.long != null)
                 Row(

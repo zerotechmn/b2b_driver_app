@@ -77,7 +77,7 @@ class HistoryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                "+${statement.amount.toInt().toCurrency()}",
+                "${(historyType == HistoryTypes.purchase || historyType == HistoryTypes.withdraw) ? "-" : "+"}${statement.amount.toInt().toCurrency()}",
                 style: textTheme(context).titleMedium!.copyWith(
                   color:
                       (historyType == HistoryTypes.purchase ||

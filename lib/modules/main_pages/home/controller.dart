@@ -48,6 +48,8 @@ class HomeController extends GetxController {
           ).format(DateTime.now().subtract(Duration(days: 1))),
           DateFormat("yyyy-MM-dd", "mn_MN").format(DateTime.now()),
         );
+        // Order statement by date descending
+        statements.value.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       }
       isLoading.value = false;
     } on AppException catch (e) {

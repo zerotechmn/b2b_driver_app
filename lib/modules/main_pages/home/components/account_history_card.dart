@@ -22,11 +22,14 @@ class AccountHistoryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Өнөөдөр хийсэн гүйлгээ",
-            style: textTheme(context).bodySmall!.copyWith(
-              color: colors(context).labelSecondary,
-              fontWeight: FontWeight.w600,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Өнөөдөр хийсэн гүйлгээ",
+              style: textTheme(context).bodySmall!.copyWith(
+                color: colors(context).labelSecondary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           GetBuilder<HomeController>(
@@ -71,10 +74,11 @@ class AccountHistoryCard extends StatelessWidget {
                 );
               }
               List<StatementModel> statements = controller.statements.value;
-              return ListView.builder(
+              return ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: statements.length,
+                separatorBuilder: (context, index) => SizedBox(height: 16),
                 itemBuilder: (context, index) {
                   return HistoryItem(
                     statement: statements[index],

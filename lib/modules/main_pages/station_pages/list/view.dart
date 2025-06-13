@@ -10,8 +10,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class StationListView extends StatelessWidget {
+class StationListView extends StatefulWidget {
   const StationListView({super.key});
+
+  @override
+  State<StationListView> createState() => _StationListViewState();
+}
+
+class _StationListViewState extends State<StationListView> {
+  TextEditingController searchController = TextEditingController();
+  final stationController = Get.find<StationController>();
+
+  @override
+  void initState() {
+    searchController.text = stationController.searchInput.value;
+    searchController.addListener(() {
+      stationController.setSearchInput(searchController.text);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

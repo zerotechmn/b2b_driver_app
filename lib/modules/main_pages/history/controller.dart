@@ -48,6 +48,8 @@ class HistoryController extends GetxController {
       (json) => UserModel.fromJson(json),
     );
     isLoading.value = true;
+    totalCredit.value = 0;
+    totalDebit.value = 0;
     update();
     try {
       if (user != null) {
@@ -56,11 +58,15 @@ class HistoryController extends GetxController {
           DateFormat("yyyy-MM-dd", "mn_MN").format(startDate.value),
           DateFormat("yyyy-MM-dd", "mn_MN").format(endDate.value),
         );
+        // Order statement by date descending
+        statements.value.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         for (var i = 0; i < statements.value.length; i++) {
           final statement = statements.value[i];
-          if (statement.statementTypeEnum == "PURCHASE") {
+          if (statement.statementTypeEnum == "PURCHASE" ||
+              statement.statementTypeEnum == "WITHDRAW") {
             totalCredit.value += statement.amount;
-          } else if (statement.statementTypeEnum == "CHARGE") {
+          } else if (statement.statementTypeEnum == "CHARGE" ||
+              statement.statementTypeEnum == "BONUS") {
             totalDebit.value += statement.amount;
           }
         }
