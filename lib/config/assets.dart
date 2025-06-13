@@ -24,6 +24,8 @@ class AssetConstants {
   static final String downloadIcon = "assets/icons/download.svg";
 
   static final String lockOutlinedIcon = "assets/icons/lock-outlined.svg";
+  static final String locationPinSimpleIcon =
+      "assets/icons/location-pin-simple.svg";
   static final String locationPinIcon = "assets/icons/location-pin.svg";
   static final String locationPinOutlinedIcon =
       "assets/icons/location-pin-outlined.svg";

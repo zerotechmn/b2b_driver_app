@@ -62,7 +62,7 @@ class ProfileView extends StatelessWidget {
                     expand: false,
                     context: context,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(32),
                     ),
                     backgroundColor: colors(context).backgroundPrimary,
                     builder:

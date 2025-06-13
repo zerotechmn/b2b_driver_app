@@ -3,6 +3,7 @@ import 'package:b2b_driver_app/utils/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 T parseOrThrow<T>(
   Map<String, dynamic> json,
@@ -76,5 +77,17 @@ void showLoadingDialog() {
 void hideLoadingDialog() {
   if (Get.isDialogOpen == true) {
     Get.back();
+  }
+}
+
+Future<void> openMapApp(double latitude, double longitude) async {
+  final Uri googleUrl = Uri.parse(
+    'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
+  );
+  if (await canLaunchUrl(googleUrl)) {
+    await launchUrl(googleUrl);
+  } else {
+    // Handle the case where Google Maps app is not installed
+    throw 'Could not launch Google Maps';
   }
 }

@@ -88,7 +88,7 @@ class AuthController extends GetxController {
           expand: false,
           context: Get.context!,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(32),
           ),
           isDismissible: false,
           backgroundColor: colors(Get.context!).backgroundPrimary,
@@ -141,7 +141,7 @@ class AuthController extends GetxController {
           expand: false,
           context: Get.context!,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(32),
           ),
           isDismissible: false,
           backgroundColor: colors(Get.context!).backgroundPrimary,

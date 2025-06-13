@@ -29,8 +29,8 @@ class ConfirmSheet extends StatelessWidget {
     return Material(
       color: colors(context).backgroundPrimary,
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(16),
-        topRight: Radius.circular(16),
+        topLeft: Radius.circular(32),
+        topRight: Radius.circular(32),
       ),
       child: SafeArea(
         top: false,
