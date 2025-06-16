@@ -19,7 +19,7 @@ class StationModel {
   final List<StationProductModel>? products;
   final StationAdditionalInfoModel? additionalInfo;
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   double? distanceKm;
 
   StationModel({

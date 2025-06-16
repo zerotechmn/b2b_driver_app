@@ -42,7 +42,7 @@ class AllowedStationsCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        stations.isEmpty ? "Салбар байхгүй" : stations,
+                        stations.isEmpty ? "Бүгд" : stations,
                         softWrap: true,
                         style: textTheme(context).bodyLarge,
                       ),

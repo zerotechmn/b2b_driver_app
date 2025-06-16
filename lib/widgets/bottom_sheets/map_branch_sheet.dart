@@ -171,7 +171,16 @@ class _MapBranchSheetState extends State<MapBranchSheet> {
                                 itemBuilder: (context, index) {
                                   return BranchItem(
                                     station: stations[index],
-                                    onCenterMap: widget.onCenterMap,
+                                    onCenterMap: (e) {
+                                      if (widget.onCenterMap != null) {
+                                        widget.onCenterMap!(e);
+                                        _sheetController.animateTo(
+                                          0.3,
+                                          duration: Duration(milliseconds: 300),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
+                                    },
                                   );
                                 },
                                 separatorBuilder:

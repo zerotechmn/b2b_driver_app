@@ -15,7 +15,7 @@ class StationController extends GetxController {
 
   var tabIndex = 0.obs;
 
-  List<StationModel> _stationList = [];
+  Rx<List<StationModel>> stationList = Rx<List<StationModel>>([]);
   List<AddressModel> _addressList = [];
 
   Rx<List<StationModel>> stations = Rx<List<StationModel>>([]);
@@ -48,11 +48,11 @@ class StationController extends GetxController {
       [loadStationsFromCache(), loadAddressesFromCache()].map((e) => e),
     );
     // Update the reactive variables
-    stations.value = _stationList;
+    stations.value = stationList.value;
     addresses.value = _addressList;
     // Extract unique services from stations and removes empty string
     stationServices.value =
-        _stationList
+        stationList.value
             .expand(
               (station) =>
                   (station.additionalInfo?.additionalServices ?? "").split(","),
@@ -63,7 +63,7 @@ class StationController extends GetxController {
           ..sort((a, b) => a.compareTo(b));
     // Extract unique station products by product code
     stationProducts.value =
-        _stationList
+        stationList.value
             .expand((station) => station.products ?? [])
             .where((product) => product.productCode.isNotEmpty)
             .toSet()
@@ -107,7 +107,7 @@ class StationController extends GetxController {
   onFilterChange() {
     // Filter stations based on search input, selected service, province, and district
     final filteredStations =
-        _stationList.where((station) {
+        stationList.value.where((station) {
           final matchesSearch = station.name.toLowerCase().contains(
             searchInput.value.toLowerCase(),
           );
@@ -137,7 +137,7 @@ class StationController extends GetxController {
           (json) => StationModel.fromJson(json),
         );
     if (data.isNotEmpty) {
-      _stationList = data.whereType<StationModel>().toList();
+      stationList.value = data.whereType<StationModel>().toList();
     }
     await fetchGasStations();
   }
@@ -156,13 +156,16 @@ class StationController extends GetxController {
 
   fetchGasStations() async {
     try {
-      _stationList = await userRepository.fetchGasStations();
+      stationList.value = await userRepository.fetchGasStations();
     } on AppException catch (e) {
       e.showSnackbar();
     }
     // Save to cache
-    if (_stationList.isEmpty) return;
-    await storageService.writeJsonList<StationModel>("stations", _stationList);
+    if (stationList.value.isEmpty) return;
+    await storageService.writeJsonList<StationModel>(
+      "stations",
+      stationList.value,
+    );
   }
 
   fetchAddresses() async {

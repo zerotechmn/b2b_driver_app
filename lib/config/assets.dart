@@ -41,4 +41,7 @@ class AssetConstants {
       "assets/icons/location-arrow-sm.svg";
   static final String timeActiveIcon = "assets/icons/time-active.svg";
   static final String timeSmallIcon = "assets/icons/time-sm.svg";
+
+  static final String pinUserIcon = "assets/pins/user_pin.svg";
+  static final String pinStationIcon = "assets/pins/station_pin.svg";
 }

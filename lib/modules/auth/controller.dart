@@ -32,6 +32,11 @@ class AuthController extends GetxController {
     try {
       isLoading.value = true;
       final user = await authRepository.login(phoneNo.value, password.value);
+      if (user.cardId == null || user.cardId!.isEmpty) {
+        throw AppException(
+          "Танд холбогдсон карт байхгүй байна. Та картын холболт хийгдсэн эсэхээ шалгана уу.",
+        );
+      }
       storageService.writeJson("user", user);
       Get.offNamed(AppRouters.home);
     } on AppException catch (e) {

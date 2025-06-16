@@ -24,6 +24,12 @@ class AllowedPetrolCard extends StatelessWidget {
           SvgPicture.asset(AssetConstants.lockViewFinderIcon),
           GetBuilder<HomeController>(
             builder: (controller) {
+              String? products = controller.cardDetail.value?.products.join(
+                ", ",
+              );
+              if (products == null || products.isEmpty) {
+                products = "Бүгд";
+              }
               return Flexible(
                 child: Skeletonizer(
                   enabled: controller.isLoading.value,
@@ -38,8 +44,7 @@ class AllowedPetrolCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        controller.cardDetail.value?.products.join(", ") ??
-                            "--------",
+                        products,
                         softWrap: true,
                         style: textTheme(context).bodyLarge,
                       ),

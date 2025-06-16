@@ -29,7 +29,7 @@ class _NearbyStationCardState extends State<NearbyStationCard> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => getLocation());
     // Listen to station list changes
-    stationWorker = ever(stationController.stations, (_) {
+    stationWorker = ever(stationController.stationList, (_) {
       if (currentPosition != null) {
         findNearestStation();
       }

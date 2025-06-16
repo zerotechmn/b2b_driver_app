@@ -1,7 +1,9 @@
+import 'package:b2b_driver_app/config/assets.dart';
 import 'package:b2b_driver_app/modules/main_pages/station_pages/controller.dart';
 import 'package:b2b_driver_app/widgets/bottom_sheets/map_branch_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class StationMapView extends StatefulWidget {
@@ -52,7 +54,7 @@ class _StationMapViewState extends State<StationMapView> {
         controller.addMarker(
           point,
           markerIcon: MarkerIcon(
-            icon: Icon(Icons.local_gas_station, color: Colors.blue, size: 40),
+            iconWidget: SvgPicture.asset(AssetConstants.pinStationIcon),
           ),
         );
       }
@@ -72,22 +74,18 @@ class _StationMapViewState extends State<StationMapView> {
         controller: controller,
         osmOption: OSMOption(
           userTrackingOption: const UserTrackingOption(
-            enableTracking: false,
+            enableTracking: true,
             unFollowUser: false,
           ),
           zoomOption: const ZoomOption(
-            initZoom: 10,
-            minZoomLevel: 4,
+            initZoom: 12,
+            minZoomLevel: 7,
             maxZoomLevel: 19,
             stepZoom: 1.0,
           ),
           userLocationMarker: UserLocationMaker(
-            personMarker: const MarkerIcon(
-              icon: Icon(
-                Icons.location_history_rounded,
-                color: Colors.red,
-                size: 48,
-              ),
+            personMarker: MarkerIcon(
+              iconWidget: SvgPicture.asset(AssetConstants.pinUserIcon),
             ),
             directionArrowMarker: const MarkerIcon(
               icon: Icon(Icons.double_arrow, size: 48),
