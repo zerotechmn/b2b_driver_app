@@ -205,12 +205,10 @@ class StationController extends GetxController {
           stationList.value.where((station) {
             final matchesProvince =
                 selectedProvinceCode.value.isEmpty ||
-                station.additionalInfo?.aimagHot ==
-                    searchProvinceController.text;
+                station.additionalInfo?.aimagHot == selectedProvinceCode.value;
             final matchesDistrict =
                 selectedDistrictCode.value.isEmpty ||
-                station.additionalInfo?.duuregSum ==
-                    searchDistrictController.text;
+                station.additionalInfo?.duuregSum == selectedDistrictCode.value;
 
             return matchesProvince && matchesDistrict;
           }).toList();
