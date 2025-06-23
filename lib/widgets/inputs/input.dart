@@ -17,6 +17,7 @@ class Input extends StatefulWidget {
   final Widget? trailingIcon;
   final bool? showClearIcon;
   final Function(String)? onChanged;
+  final Function()? onTap;
 
   const Input({
     super.key,
@@ -33,6 +34,7 @@ class Input extends StatefulWidget {
     this.trailingIcon,
     this.showClearIcon,
     this.onChanged,
+    this.onTap,
   });
 
   @override
@@ -117,6 +119,7 @@ class _InputState extends State<Input> {
     }
 
     return TextField(
+      onTap: widget.onTap,
       controller: widget.controller,
       focusNode: widget.focusNode,
       keyboardType: widget.keyboardType,

@@ -1,13 +1,11 @@
-import 'package:b2b_driver_app/config/assets.dart';
 import 'package:b2b_driver_app/data/models/station_model.dart';
 import 'package:b2b_driver_app/modules/main_pages/station_pages/controller.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
 import 'package:b2b_driver_app/widgets/bottom_sheets/drag_handler.dart';
-import 'package:b2b_driver_app/widgets/inputs/input.dart';
+import 'package:b2b_driver_app/widgets/inputs/select.dart';
 import 'package:b2b_driver_app/widgets/items/filter_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class AdvencedSearchSheet extends StatefulWidget {
@@ -25,7 +23,6 @@ class _AdvencedSearchSheetState extends State<AdvencedSearchSheet> {
 
   @override
   Widget build(BuildContext context) {
-    StationController controller = Get.find<StationController>();
     return SizedBox(
       width: double.infinity,
       child: DraggableScrollableSheet(
@@ -48,31 +45,53 @@ class _AdvencedSearchSheetState extends State<AdvencedSearchSheet> {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 16),
-                        DragHandler(),
-                        SizedBox(height: 16),
-                        Input(
-                          hint: "Салбар хайх",
-                          controller: controller.searchController,
-                          trailingIcon: SvgPicture.asset(
-                            AssetConstants.arrowDownCircleIcon,
-                          ),
-                          isReadOnly: true,
-                        ),
-                        SizedBox(height: 16),
-                        Input(
-                          hint: "Салбар хайх",
-                          controller: controller.searchController,
-                          trailingIcon: SvgPicture.asset(
-                            AssetConstants.arrowDownCircleIcon,
-                          ),
-                          isReadOnly: true,
-                        ),
-                        SizedBox(height: 16),
-                        Divider(color: colors(context).backgroundSecondary),
-                      ],
+                    child: // In your widget, replace the Select widgets with:
+                        GetBuilder<StationController>(
+                      builder: (controller) {
+                        return Column(
+                          children: [
+                            SizedBox(height: 16),
+                            DragHandler(),
+                            // Province Select
+                            Select(
+                              hint: "Хот аймаг",
+                              controller: controller.searchProvinceController,
+                              selectedValue:
+                                  controller.selectedProvinceCode.value,
+                              options:
+                                  controller.provinces.value.map((province) {
+                                    return SelectOption(
+                                      value: province.code ?? '',
+                                      label: province.name,
+                                    );
+                                  }).toList(),
+                              onChanged: (value, label) {
+                                controller.onProvinceSelected(value, label);
+                              },
+                            ),
+
+                            SizedBox(height: 16),
+
+                            // District Select
+                            Select(
+                              hint: "Дүүрэг сум",
+                              controller: controller.searchDistrictController,
+                              selectedValue:
+                                  controller.selectedDistrictCode.value,
+                              options:
+                                  controller.districts.value.map((district) {
+                                    return SelectOption(
+                                      value: district.code ?? '',
+                                      label: district.name,
+                                    );
+                                  }).toList(),
+                              onChanged: (value, label) {
+                                controller.onDistrictSelected(value, label);
+                              },
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                   // Scrollable content
@@ -83,7 +102,7 @@ class _AdvencedSearchSheetState extends State<AdvencedSearchSheet> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 8),
+                          SizedBox(height: 16),
                           Text(
                             "ОНЦЛОГУУД",
                             style: textTheme(
@@ -128,7 +147,7 @@ class _AdvencedSearchSheetState extends State<AdvencedSearchSheet> {
                           SizedBox(height: 16),
                           GetBuilder<StationController>(
                             builder: (controller) {
-                              List<StationProductModel> fuelTypes =
+                              List<StationProductModel> productTypes =
                                   controller.stationProducts.value;
                               return SizedBox(
                                 width: double.infinity,
@@ -136,18 +155,19 @@ class _AdvencedSearchSheetState extends State<AdvencedSearchSheet> {
                                   spacing: 8,
                                   runSpacing: 8,
                                   children:
-                                      fuelTypes.map((fuelType) {
+                                      productTypes.map((productType) {
                                         return FilterItem(
-                                          name: fuelType.productName,
+                                          name: productType.productName,
                                           isSelected:
                                               controller
-                                                  .selectedFuelType
+                                                  .selectedProductType
                                                   .value ==
-                                              fuelType.productCode,
+                                              productType.productCode,
                                           onTap:
-                                              () => controller.selectedFuelType(
-                                                fuelType.productCode,
-                                              ),
+                                              () => controller
+                                                  .setSelectedProductType(
+                                                    productType.productCode,
+                                                  ),
                                         );
                                       }).toList(),
                                 ),

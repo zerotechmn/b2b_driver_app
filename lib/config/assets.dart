@@ -20,6 +20,9 @@ class AssetConstants {
   static final String uploadBoxIcon = "assets/icons/upload-box.svg";
   static final String logoutIcon = "assets/icons/log-out.svg";
 
+  static final String optionInactiveIcon = "assets/icons/option-inactive.svg";
+  static final String optionActiveIcon = "assets/icons/option-active.svg";
+
   static final String searchIcon = "assets/icons/search.svg";
   static final String filterIcon = "assets/icons/filter.svg";
   static final String uploadIcon = "assets/icons/upload.svg";
