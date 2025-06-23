@@ -50,11 +50,19 @@ class StationController extends GetxController {
       setSearchInput(searchController.text);
     });
     searchProvinceController.addListener(() {
-      if (searchController.text.isEmpty) {
-        searchDistrictController.text = "";
+      if (searchProvinceController.text.isEmpty) {
         selectedProvinceCode.value = "";
         selectedDistrictCode.value = "";
-        update();
+        if (searchDistrictController.text.isEmpty) {
+          onFilterChange();
+        }
+        searchDistrictController.text = "";
+      }
+    });
+    searchDistrictController.addListener(() {
+      if (searchDistrictController.text.isEmpty) {
+        selectedDistrictCode.value = "";
+        onFilterChange();
       }
     });
     super.onReady();
@@ -188,26 +196,80 @@ class StationController extends GetxController {
   }
 
   onFilterChange() {
-    // Filter stations based on search input, selected service, province, and district
+    // First, filter stations by location (province/district) - TOP PRIORITY
+    List<StationModel> locationFilteredStations = stationList.value;
+
+    if (selectedProvinceCode.value.isNotEmpty ||
+        selectedDistrictCode.value.isNotEmpty) {
+      locationFilteredStations =
+          stationList.value.where((station) {
+            final matchesProvince =
+                selectedProvinceCode.value.isEmpty ||
+                station.additionalInfo?.aimagHot ==
+                    searchProvinceController.text;
+            final matchesDistrict =
+                selectedDistrictCode.value.isEmpty ||
+                station.additionalInfo?.duuregSum ==
+                    searchDistrictController.text;
+
+            return matchesProvince && matchesDistrict;
+          }).toList();
+    }
+
+    // Update available services based on location-filtered stations
+    final availableServices =
+        locationFilteredStations
+            .expand(
+              (station) =>
+                  (station.additionalInfo?.additionalServices ?? "").split(","),
+            )
+            .where((service) => service.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort((a, b) => a.compareTo(b));
+
+    // Update available products based on location-filtered stations
+    final productMap = <String, StationProductModel>{};
+    for (final product in locationFilteredStations.expand(
+      (station) => station.products ?? [],
+    )) {
+      if (product.productCode.isNotEmpty) {
+        productMap[product.productCode] = product;
+      }
+    }
+    final availableProducts =
+        productMap.values.toList()
+          ..sort((a, b) => a.productCode.compareTo(b.productCode));
+
+    // Update the reactive lists
+    stationServices.value = availableServices;
+    stationProducts.value = availableProducts;
+
+    // Clear selected service/product if they're no longer available
+    if (selectedStationService.value.isNotEmpty &&
+        !availableServices.contains(selectedStationService.value)) {
+      selectedStationService.value = "";
+    }
+
+    if (selectedProductType.value.isNotEmpty &&
+        !availableProducts.any(
+          (p) => p.productCode == selectedProductType.value,
+        )) {
+      selectedProductType.value = "";
+    }
+
+    // Now apply all filters to get final station list
     final filteredStations =
-        stationList.value.where((station) {
+        locationFilteredStations.where((station) {
           final matchesSearch = station.name.toLowerCase().contains(
             searchInput.value.toLowerCase(),
           );
+
           final matchesService =
               selectedStationService.value.isEmpty ||
               (station.additionalInfo?.additionalServices ?? "")
                   .split(",")
                   .contains(selectedStationService.value);
-
-          // Updated to use codes for more accurate filtering
-          final matchesAddress =
-              (selectedProvinceCode.value.isEmpty ||
-                  station.additionalInfo?.aimagHot ==
-                      searchProvinceController.text) ||
-              (selectedDistrictCode.value.isEmpty ||
-                  station.additionalInfo?.duuregSum ==
-                      searchDistrictController.text);
 
           final matchesFuelType =
               selectedProductType.value.isEmpty ||
@@ -217,10 +279,7 @@ class StationController extends GetxController {
                   ) ??
                   false);
 
-          return matchesSearch &&
-              matchesService &&
-              matchesAddress &&
-              matchesFuelType;
+          return matchesSearch && matchesService && matchesFuelType;
         }).toList();
 
     stations.value = filteredStations;

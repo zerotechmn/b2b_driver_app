@@ -50,6 +50,7 @@ class _InputState extends State<Input> {
   @override
   void initState() {
     super.initState();
+    onValueChange();
     widget.controller?.addListener(onValueChange);
   }
 

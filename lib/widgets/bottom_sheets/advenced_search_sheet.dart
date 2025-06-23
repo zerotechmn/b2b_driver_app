@@ -95,26 +95,30 @@ class _AdvencedSearchSheetState extends State<AdvencedSearchSheet> {
                     ),
                   ),
                   // Scrollable content
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 16),
-                          Text(
-                            "ОНЦЛОГУУД",
-                            style: textTheme(
-                              context,
-                            ).bodySmall!.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(height: 16),
-                          GetBuilder<StationController>(
-                            builder: (controller) {
-                              List<String> services =
-                                  controller.stationServices.value;
-                              return SizedBox(
+                  GetBuilder<StationController>(
+                    builder: (controller) {
+                      List<StationProductModel> productTypes =
+                          controller.stationProducts.value;
+                      List<String> services = controller.stationServices.value;
+                      if (productTypes.isEmpty && services.isEmpty) {
+                        return SizedBox.shrink();
+                      }
+                      return Expanded(
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 16),
+                              Text(
+                                "ОНЦЛОГУУД",
+                                style: textTheme(context).bodySmall!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              SizedBox(
                                 width: double.infinity,
                                 child: Wrap(
                                   spacing: 8,
@@ -134,22 +138,16 @@ class _AdvencedSearchSheetState extends State<AdvencedSearchSheet> {
                                         );
                                       }).toList(),
                                 ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            "ТҮЛШНИЙ ТӨРӨЛ",
-                            style: textTheme(
-                              context,
-                            ).bodySmall!.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(height: 16),
-                          GetBuilder<StationController>(
-                            builder: (controller) {
-                              List<StationProductModel> productTypes =
-                                  controller.stationProducts.value;
-                              return SizedBox(
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                "ТҮЛШНИЙ ТӨРӨЛ",
+                                style: textTheme(context).bodySmall!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              SizedBox(
                                 width: double.infinity,
                                 child: Wrap(
                                   spacing: 8,
@@ -171,13 +169,13 @@ class _AdvencedSearchSheetState extends State<AdvencedSearchSheet> {
                                         );
                                       }).toList(),
                                 ),
-                              );
-                            },
+                              ),
+                              SizedBox(height: 16),
+                            ],
                           ),
-                          SizedBox(height: 16),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
