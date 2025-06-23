@@ -2,6 +2,7 @@ import 'package:b2b_driver_app/config/assets.dart';
 import 'package:b2b_driver_app/data/models/station_model.dart';
 import 'package:b2b_driver_app/modules/main_pages/station_pages/controller.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
+import 'package:b2b_driver_app/widgets/bottom_sheets/advenced_search_sheet.dart';
 import 'package:b2b_driver_app/widgets/bottom_sheets/drag_handler.dart';
 import 'package:b2b_driver_app/widgets/buttons/small_button.dart';
 import 'package:b2b_driver_app/widgets/inputs/input.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MapBranchSheet extends StatefulWidget {
   const MapBranchSheet({super.key, this.onCenterMap});
@@ -94,6 +96,21 @@ class _MapBranchSheetState extends State<MapBranchSheet> {
                                     icon: SvgPicture.asset(
                                       AssetConstants.filterIcon,
                                     ),
+                                    onPressed:
+                                        () => showMaterialModalBottomSheet(
+                                          expand: false,
+                                          context: context,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              32,
+                                            ),
+                                          ),
+                                          backgroundColor:
+                                              colors(context).backgroundPrimary,
+                                          builder:
+                                              (context) =>
+                                                  AdvencedSearchSheet(),
+                                        ),
                                     width: 50,
                                     height: 50,
                                     borderRadius: 16,

@@ -2,6 +2,7 @@ import 'package:b2b_driver_app/config/assets.dart';
 import 'package:b2b_driver_app/data/models/station_model.dart';
 import 'package:b2b_driver_app/modules/main_pages/station_pages/controller.dart';
 import 'package:b2b_driver_app/theme/app_theme.dart';
+import 'package:b2b_driver_app/widgets/bottom_sheets/advenced_search_sheet.dart';
 import 'package:b2b_driver_app/widgets/buttons/small_button.dart';
 import 'package:b2b_driver_app/widgets/inputs/input.dart';
 import 'package:b2b_driver_app/widgets/items/branch_item.dart';
@@ -9,6 +10,7 @@ import 'package:b2b_driver_app/widgets/items/filter_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class StationListView extends StatefulWidget {
   const StationListView({super.key});
@@ -55,6 +57,16 @@ class _StationListViewState extends State<StationListView> {
                   ),
                   SmallButton(
                     icon: SvgPicture.asset(AssetConstants.filterIcon),
+                    onPressed:
+                        () => showMaterialModalBottomSheet(
+                          expand: false,
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                          backgroundColor: colors(context).backgroundPrimary,
+                          builder: (context) => AdvencedSearchSheet(),
+                        ),
                     width: 50,
                     height: 50,
                     borderRadius: 16,

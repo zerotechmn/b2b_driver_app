@@ -80,7 +80,7 @@ class _NearbyStationCardState extends State<NearbyStationCard> {
   }
 
   void findNearestStation() {
-    final stations = stationController.stations.value;
+    final stations = stationController.stationList.value;
     if (stations.isEmpty || currentPosition == null) {
       setState(() {
         isLoading = false;

@@ -1,7 +1,7 @@
 name: b2b_driver_app
 description: "A new Flutter project."
 publish_to: "none"
-version: 0.1.0+2
+version: 0.1.0+3
 
 environment:
   sdk: ^3.7.2

@@ -15,37 +15,39 @@ class FilterItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      borderRadius: BorderRadius.circular(16),
-      color:
-          isSelected
-              ? colors(context).primary
-              : colors(context).backgroundPrimary,
-      child: InkWell(
+    return IntrinsicWidth(
+      child: Material(
         borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Container(
-          height: 45,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border:
-                isSelected
-                    ? null
-                    : Border.all(
-                      width: 2,
-                      color: colors(context).backgroundSecondary!,
-                    ),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Center(
-            child: Text(
-              name,
-              style: textTheme(context).bodyMedium!.copyWith(
-                fontWeight: FontWeight.w500,
-                color:
-                    isSelected
-                        ? colors(context).backgroundPrimary
-                        : colors(context).labelPrimary,
+        color:
+            isSelected
+                ? colors(context).primary
+                : colors(context).backgroundPrimary,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Container(
+            height: 45,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border:
+                  isSelected
+                      ? null
+                      : Border.all(
+                        width: 2,
+                        color: colors(context).backgroundSecondary!,
+                      ),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Text(
+                name,
+                style: textTheme(context).bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color:
+                      isSelected
+                          ? colors(context).backgroundPrimary
+                          : colors(context).labelPrimary,
+                ),
               ),
             ),
           ),
