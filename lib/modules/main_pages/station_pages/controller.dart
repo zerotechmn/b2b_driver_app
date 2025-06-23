@@ -62,15 +62,19 @@ class StationController extends GetxController {
             .toList()
           ..sort((a, b) => a.compareTo(b));
     // Extract unique station products by product code
+    final productMap = <String, StationProductModel>{};
+    for (final product in stationList.value.expand(
+      (station) => station.products ?? [],
+    )) {
+      if (product.productCode.isNotEmpty) {
+        productMap[product.productCode] = product;
+      }
+    }
     stationProducts.value =
-        stationList.value
-            .expand((station) => station.products ?? [])
-            .where((product) => product.productCode.isNotEmpty)
-            .toSet()
-            .toList()
-            .cast<StationProductModel>()
+        productMap.values.toList()
           ..sort((a, b) => a.productCode.compareTo(b.productCode));
     isLoading.value = false;
+    debugPrint(stationProducts.value.length.toString());
     update();
   }
 
@@ -104,6 +108,18 @@ class StationController extends GetxController {
     onFilterChange();
   }
 
+  // Set selected fuel type
+  void setSelectedFuelType(String fuelType) {
+    // If the fuel type is already selected, clear it
+    if (selectedFuelType.value == fuelType) {
+      selectedFuelType.value = "";
+      onFilterChange();
+      return;
+    }
+    selectedFuelType.value = fuelType;
+    onFilterChange();
+  }
+
   onFilterChange() {
     // Filter stations based on search input, selected service, province, and district
     final filteredStations =
@@ -122,6 +138,8 @@ class StationController extends GetxController {
                   station.additionalInfo?.aimagHot == selectedProvince.value) &&
               (selectedDistrict.value.isEmpty ||
                   station.additionalInfo?.duuregSum == selectedDistrict.value);
+
+          // Apply filter with fuel type
 
           return matchesSearch && matchesService && matchesAddress;
         }).toList();
