@@ -7,7 +7,7 @@ part 'card_model.g.dart';
 class CardModel {
   final String id;
 
-  final String vendorId;
+  final String? vendorId;
   final String driverId;
   final String cardholderName;
   final String cardNumber;

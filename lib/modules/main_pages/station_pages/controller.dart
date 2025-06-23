@@ -12,6 +12,10 @@ class StationController extends GetxController {
   final StorageService storageService = Get.find<StorageService>();
 
   final TextEditingController searchController = TextEditingController();
+  final TextEditingController searchProvinceController =
+      TextEditingController();
+  final TextEditingController searchDistrictController =
+      TextEditingController();
 
   var tabIndex = 0.obs;
 
@@ -25,11 +29,17 @@ class StationController extends GetxController {
     [],
   );
 
+  // Address selection reactive variables
+  Rx<List<AddressModel>> provinces = Rx<List<AddressModel>>([]);
+  Rx<List<AddressModel>> districts = Rx<List<AddressModel>>([]);
+
   Rx<String> searchInput = Rx<String>("");
   Rx<String> selectedStationService = Rx<String>("");
-  Rx<String> selectedFuelType = Rx<String>("");
-  Rx<String> selectedProvince = Rx<String>("");
-  Rx<String> selectedDistrict = Rx<String>("");
+  Rx<String> selectedProductType = Rx<String>("");
+
+  // Updated to use codes instead of names for better filtering
+  Rx<String> selectedProvinceCode = Rx<String>("");
+  Rx<String> selectedDistrictCode = Rx<String>("");
 
   var isLoading = false.obs;
 
@@ -38,6 +48,22 @@ class StationController extends GetxController {
     loadFromCache();
     searchController.addListener(() {
       setSearchInput(searchController.text);
+    });
+    searchProvinceController.addListener(() {
+      if (searchProvinceController.text.isEmpty) {
+        selectedProvinceCode.value = "";
+        selectedDistrictCode.value = "";
+        if (searchDistrictController.text.isEmpty) {
+          onFilterChange();
+        }
+        searchDistrictController.text = "";
+      }
+    });
+    searchDistrictController.addListener(() {
+      if (searchDistrictController.text.isEmpty) {
+        selectedDistrictCode.value = "";
+        onFilterChange();
+      }
     });
     super.onReady();
   }
@@ -50,6 +76,16 @@ class StationController extends GetxController {
     // Update the reactive variables
     stations.value = stationList.value;
     addresses.value = _addressList;
+
+    // Extract provinces (root level addresses)
+    provinces.value =
+        _addressList
+            .where(
+              (address) =>
+                  address.children != null && address.children!.isNotEmpty,
+            )
+            .toList();
+
     // Extract unique services from stations and removes empty string
     stationServices.value =
         stationList.value
@@ -61,14 +97,18 @@ class StationController extends GetxController {
             .toSet()
             .toList()
           ..sort((a, b) => a.compareTo(b));
+
     // Extract unique station products by product code
+    final productMap = <String, StationProductModel>{};
+    for (final product in stationList.value.expand(
+      (station) => station.products ?? [],
+    )) {
+      if (product.productCode.isNotEmpty) {
+        productMap[product.productCode] = product;
+      }
+    }
     stationProducts.value =
-        stationList.value
-            .expand((station) => station.products ?? [])
-            .where((product) => product.productCode.isNotEmpty)
-            .toSet()
-            .toList()
-            .cast<StationProductModel>()
+        productMap.values.toList()
           ..sort((a, b) => a.productCode.compareTo(b.productCode));
     isLoading.value = false;
     update();
@@ -86,16 +126,55 @@ class StationController extends GetxController {
     onFilterChange();
   }
 
-  // Method to set the selected province
-  void setSelectedProvince(String province) {
-    selectedProvince.value = province;
+  // Updated method to handle province selection with cascading
+  void onProvinceSelected(String provinceCode, String provinceName) {
+    selectedProvinceCode.value = provinceCode;
+    searchProvinceController.text = provinceName;
+
+    // Find selected province and load its districts
+    final selectedProvince = provinces.value.firstWhereOrNull(
+      (province) => province.code == provinceCode,
+    );
+
+    if (selectedProvince != null) {
+      districts.value = selectedProvince.children ?? [];
+    } else {
+      districts.value = [];
+    }
+
+    // Clear district selection when province changes
+    selectedDistrictCode.value = "";
+    searchDistrictController.clear();
+
     onFilterChange();
   }
 
-  // Method to set the selected district
-  void setSelectedDistrict(String district) {
-    selectedDistrict.value = district;
+  // Updated method to handle district selection
+  void onDistrictSelected(String districtCode, String districtName) {
+    selectedDistrictCode.value = districtCode;
+    searchDistrictController.text = districtName;
     onFilterChange();
+  }
+
+  // Keep backward compatibility - these methods now use the new selection methods
+  void setSelectedProvince(String province) {
+    // Find province by name for backward compatibility
+    final provinceModel = provinces.value.firstWhereOrNull(
+      (p) => p.name == province,
+    );
+    if (provinceModel != null) {
+      onProvinceSelected(provinceModel.code ?? "", provinceModel.name);
+    }
+  }
+
+  void setSelectedDistrict(String district) {
+    // Find district by name for backward compatibility
+    final districtModel = districts.value.firstWhereOrNull(
+      (d) => d.name == district,
+    );
+    if (districtModel != null) {
+      onDistrictSelected(districtModel.code ?? "", districtModel.name);
+    }
   }
 
   // Set the search input and trigger filtering
@@ -104,30 +183,122 @@ class StationController extends GetxController {
     onFilterChange();
   }
 
+  // Set selected product type
+  void setSelectedProductType(String productType) {
+    // If the fuel type is already selected, clear it
+    if (selectedProductType.value == productType) {
+      selectedProductType.value = "";
+      onFilterChange();
+      return;
+    }
+    selectedProductType.value = productType;
+    onFilterChange();
+  }
+
   onFilterChange() {
-    // Filter stations based on search input, selected service, province, and district
+    // First, filter stations by location (province/district) - TOP PRIORITY
+    List<StationModel> locationFilteredStations = stationList.value;
+
+    if (selectedProvinceCode.value.isNotEmpty ||
+        selectedDistrictCode.value.isNotEmpty) {
+      locationFilteredStations =
+          stationList.value.where((station) {
+            final matchesProvince =
+                selectedProvinceCode.value.isEmpty ||
+                station.additionalInfo?.aimagHot == selectedProvinceCode.value;
+            final matchesDistrict =
+                selectedDistrictCode.value.isEmpty ||
+                station.additionalInfo?.duuregSum == selectedDistrictCode.value;
+
+            return matchesProvince && matchesDistrict;
+          }).toList();
+    }
+
+    // Update available services based on location-filtered stations
+    final availableServices =
+        locationFilteredStations
+            .expand(
+              (station) =>
+                  (station.additionalInfo?.additionalServices ?? "").split(","),
+            )
+            .where((service) => service.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort((a, b) => a.compareTo(b));
+
+    // Update available products based on location-filtered stations
+    final productMap = <String, StationProductModel>{};
+    for (final product in locationFilteredStations.expand(
+      (station) => station.products ?? [],
+    )) {
+      if (product.productCode.isNotEmpty) {
+        productMap[product.productCode] = product;
+      }
+    }
+    final availableProducts =
+        productMap.values.toList()
+          ..sort((a, b) => a.productCode.compareTo(b.productCode));
+
+    // Update the reactive lists
+    stationServices.value = availableServices;
+    stationProducts.value = availableProducts;
+
+    // Clear selected service/product if they're no longer available
+    if (selectedStationService.value.isNotEmpty &&
+        !availableServices.contains(selectedStationService.value)) {
+      selectedStationService.value = "";
+    }
+
+    if (selectedProductType.value.isNotEmpty &&
+        !availableProducts.any(
+          (p) => p.productCode == selectedProductType.value,
+        )) {
+      selectedProductType.value = "";
+    }
+
+    // Now apply all filters to get final station list
     final filteredStations =
-        stationList.value.where((station) {
+        locationFilteredStations.where((station) {
           final matchesSearch = station.name.toLowerCase().contains(
             searchInput.value.toLowerCase(),
           );
+
           final matchesService =
               selectedStationService.value.isEmpty ||
               (station.additionalInfo?.additionalServices ?? "")
                   .split(",")
                   .contains(selectedStationService.value);
 
-          final matchesAddress =
-              (selectedProvince.value.isEmpty ||
-                  station.additionalInfo?.aimagHot == selectedProvince.value) &&
-              (selectedDistrict.value.isEmpty ||
-                  station.additionalInfo?.duuregSum == selectedDistrict.value);
+          final matchesFuelType =
+              selectedProductType.value.isEmpty ||
+              (station.products?.any(
+                    (product) =>
+                        product.productCode == selectedProductType.value,
+                  ) ??
+                  false);
 
-          return matchesSearch && matchesService && matchesAddress;
+          return matchesSearch && matchesService && matchesFuelType;
         }).toList();
 
     stations.value = filteredStations;
     update();
+  }
+
+  // Method to clear all filters
+  void clearFilters() {
+    searchController.clear();
+    searchProvinceController.clear();
+    searchDistrictController.clear();
+
+    searchInput.value = "";
+    selectedStationService.value = "";
+    selectedProductType.value = "";
+    selectedProvinceCode.value = "";
+    selectedDistrictCode.value = "";
+
+    districts.value = [];
+
+    onFilterChange();
   }
 
   loadStationsFromCache() async {

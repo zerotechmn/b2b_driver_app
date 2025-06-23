@@ -48,9 +48,6 @@ class _StationMapViewState extends State<StationMapView> {
           longitude: double.parse(station.long!),
         );
         markerPoints.add(point);
-        debugPrint(
-          "Adding marker for station: ${station.name} at (${station.lat}, ${station.long})",
-        );
         controller.addMarker(
           point,
           markerIcon: MarkerIcon(

@@ -7,6 +7,8 @@ class AssetConstants {
   static final String eyeIcon = "assets/icons/eye.svg";
   static final String eyeSlashIcon = "assets/icons/eye-slash.svg";
   static final String arrowLeftIcon = "assets/icons/arrow-left.svg";
+  static final String arrowDownCircleIcon =
+      "assets/icons/arrow-down-circle.svg";
   static final String chevronRightIcon = "assets/icons/chevron-right.svg";
   static final String checkCircleIcon = "assets/icons/check-circle.svg";
 
@@ -17,6 +19,9 @@ class AssetConstants {
   static final String userSquareIcon = "assets/icons/user-square.svg";
   static final String uploadBoxIcon = "assets/icons/upload-box.svg";
   static final String logoutIcon = "assets/icons/log-out.svg";
+
+  static final String optionInactiveIcon = "assets/icons/option-inactive.svg";
+  static final String optionActiveIcon = "assets/icons/option-active.svg";
 
   static final String searchIcon = "assets/icons/search.svg";
   static final String filterIcon = "assets/icons/filter.svg";
