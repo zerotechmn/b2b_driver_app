@@ -1,4 +1,4 @@
-package com.example.b2b_driver_app
+package mn.shunkhlai.orange.driver
 
 import io.flutter.embedding.android.FlutterActivity
 
